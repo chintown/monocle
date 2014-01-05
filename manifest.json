@@ -1,12 +1,8 @@
-// http://developer.chrome.com/extensions/manifest.html
 {
-    // Required
     "manifest_version": 2,
     "name": "Scroll Preview",
     "version": "1.0",
 
-    // Recommended
-    // "default_locale": "en",
     "description": "Scroll Preview adds an enlarged scroll bar on page with a whole-page snapshot as background for better previewing.",
     "icons": {
         "16": "icons/monocle-16.png",
@@ -14,26 +10,19 @@
         "128": "icons/monocle-128.png"
     },
 
-    // Pick one (or none)
-    // "page_action": {...},
     "browser_action": {
         "default_icon": {
             "19": "icons/monocle-19.png",
             "38": "icons/monocle-38.png"
         },
         "default_title": "Scroll Preview"
-        // "default_popup": "browseraction/popup.html"
     },
 
-    // Optional
     "author": "Mike Chen",
     "background": {
         "scripts": ["background.js"],
         "persistent": false
     },
-    // "background_page": ...,
-    // "chrome_settings_overrides": ...,
-    // "chrome_url_overrides": {...},
     "commands": {
         "toggle-extension": {
             "description": "toggle-extension",
@@ -42,7 +31,6 @@
             }
         }
     },
-    // "content_pack": ...,
     "content_scripts": [
         {
             "matches": [
@@ -55,47 +43,11 @@
             ]
         }
     ],
-    // "content_security_policy": "policyString",
-    // "converted_from_user_script": ...,
-    // "current_locale": ...,
     "devtools_page": "devtools/devtools.html",
-    // "externally_connectable": {
-    // "matches": ["*://*.example.com/*"]
-    // },
-    // "file_browser_handlers": [...],
-    // "homepage_url": "http://path/to/homepage",
-    // "import": ...,
-    // "incognito": "spanning or split",
-    // "input_components": ...,
-    // "key": "publicKey",
-    // "minimum_chrome_version": "versionString",
-    // "nacl_modules": [...],
-    // "oauth2": ...,
-    // "offline_enabled": true,
-    // "omnibox": {
-    // "keyword": "aString"
-    // },
-    // "optional_permissions": ...,
-    // "options_page": "aFile.html",
-    // "page_actions": ...,
-    // "permissions": [...],
     "permissions": [
         "tabs",
         "*://*/*"
     ],
-    // "plugins": [...],
-    // "requirements": {...},
-    // "sandbox": [...],
-    // "script_badge": ...,
-    // "short_name": "Short Name",
-    // "signature": ...,
-    // "spellcheck": ...,
-    // "storage": {
-    // "managed_schema": "schema.json"
-    // },
-    // "system_indicator": ...,
-    // "tts_engine": ...,
-    // "update_url": "http://path/to/updateInfo.xml",
     "web_accessible_resources": [
         "libs/jquery-2.0.3.min.map"
     ]
