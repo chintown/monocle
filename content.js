@@ -52,6 +52,7 @@ function setupSidebar() {
 }
 
 function setupSnapshot() {
+    var lastScrollPosition = $(window).scrollTop();
     // http://html2canvas.hertzen.com/documentation.html
     html2canvas(document.body, {
         allowTaint: true,
@@ -69,6 +70,8 @@ function setupSnapshot() {
             thumbCtx.drawImage(canvas, 0, 0, SNAPSHOT_WIDTH, SNAPSHOT_HEIGHT);
             $('#snapshot').empty().append(thumbCanvas);
             $('#viewport').show();
+
+            $(window).scrollTop(lastScrollPosition);
         },
         width: CONTENT_WIDTH, //SNAPSHOT_WIDTH,
         height: CONTENT_HEIGHT, //SNAPSHOT_HEIGHT,
