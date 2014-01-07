@@ -56,6 +56,7 @@ function setupSnapshot() {
     html2canvas(document.body, {
         allowTaint: true,
         useCORS: true,
+        letterRendering: true,
         onrendered: function(canvas) {
             var ctx = canvas.getContext('2d');
             ctx.scale(SCALE_RATIO, SCALE_RATIO);
@@ -193,6 +194,7 @@ function bindDragEvent() {
 function bindJumpEvent() {
     $('#snapshot').click(function (evt) {
         var landing = getMouseYOnVisibleWindow(evt);
+        landing -= 0.5 * THUMBNAIL_HEIGHT;
         var updatedY = fixBound(landing, 0, THUMBNAIL_PLAYGROUND);
         scrollByThumbnail(updatedY);
     });
