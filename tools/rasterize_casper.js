@@ -18,7 +18,7 @@ casper.wait(5000, function() {
 
     //set the viewport to the desired height and width
     this.viewport(width, height);
-    casper.zoom(zoom).thenOpen(url, function() {
+    casper.thenOpen(url, function() {
         this.echo('Opening at ' + width + ' x ' + height);
         //Capture selector captures the whole body
         // this.captureSelector(filename, 'body');
@@ -28,7 +28,7 @@ casper.wait(5000, function() {
         this.capture(
             filename,
             {top: 0,left: 0,width: width, height: height},
-            {format: 'jpg',quality: 20}
+            {format: 'jpg',quality: 4}
         );
         this.echo('snapshot taken '+filename);
     });
