@@ -3,7 +3,7 @@
     "name": "Scroll Preview",
     "version": "1.0",
 
-    "description": "Scroll Preview adds an enlarged scroll bar on page with a whole-page snapshot as background for better previewing.",
+    "description": "Scroll Preview integrates whole-page preview with scrollbar.",
     "icons": {
         "16": "icons/monocle-16.png",
         "48": "icons/monocle-48.png",
