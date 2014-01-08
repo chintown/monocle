@@ -1,26 +1,31 @@
-var DEBUG = false;
+// TODO.
+// 1. remove devtool
 
-// function uploadImage(img) {
-//     var xhr = new XMLHttpRequest(), formData = new FormData();
-//     formData.append("user_uploaded", img);
-//     xhr.open("POST", "http://foo.com/", true);
-//     xhr.send(formData);
-// }
-// function drawLineAtTop(top) {
-//     var $line = $('#line').length === 0 ? createLine() : $('#line');
-//     $line.css('top', top);
-// }
-// function createLine() {
-//     var $line = $('<div id="line"></div>');
-//     $line.css({
-//         'width': '100%',
-//         'height': '2px',
-//         'backgroundColor': 'blue',
-//         'position': 'fixed'
-//     });
-//     $('body').append($line);
-//     return $line;
-// }
+var DEBUG = true;
+
+if (DEBUG) {
+    function uploadImage(img) {
+        var xhr = new XMLHttpRequest(), formData = new FormData();
+        formData.append("user_uploaded", img);
+        xhr.open("POST", "http://foo.com/", true);
+        xhr.send(formData);
+    }
+    function drawLineAtTop(top) {
+        var $line = $('#line').length === 0 ? createLine() : $('#line');
+        $line.css('top', top);
+    }
+    function createLine() {
+        var $line = $('<div id="line"></div>');
+        $line.css({
+            'width': '100%',
+            'height': '2px',
+            'backgroundColor': 'blue',
+            'position': 'fixed'
+        });
+        $('body').append($line);
+        return $line;
+    }
+}
 
 // --
 
@@ -52,7 +57,12 @@ function setupSidebar() {
 }
 
 function setupSnapshot() {
-    var lastScrollPosition = $(window).scrollTop();
+    LAST_SCROLL_POSITION = $(window).scrollTop();
+
+    jsSnapshot();
+    serverSideSnapshot();
+}
+function jsSnapshot() {
     // http://html2canvas.hertzen.com/documentation.html
     html2canvas(document.body, {
         allowTaint: true,
@@ -71,7 +81,7 @@ function setupSnapshot() {
             $('#snapshot').empty().append(thumbCanvas);
             $('#viewport').show();
 
-            $(window).scrollTop(lastScrollPosition);
+            $(window).scrollTop(window.LAST_SCROLL_POSITION);
         },
         width: CONTENT_WIDTH, //SNAPSHOT_WIDTH,
         height: CONTENT_HEIGHT, //SNAPSHOT_HEIGHT,
@@ -79,9 +89,38 @@ function setupSnapshot() {
     });
 }
 
+function serverSideSnapshot() {
+    var url = 'http://www.chintown.org/monocle/';
+    $.get(url, {
+        'w': VIEWPORT_WIDTH,
+        'h': CONTENT_HEIGHT,
+        'u': encodeURI(window.location.href),
+        'z': window.devicePixelRatio
+    }).done(function(data) {
+        var urlParam = window.location.href.replace(/[^a-zA-Z0-9]/gi, '-').replace(/^https?-+/, '');
+        var imgSrc = url + 'result.php?u=' + encodeURI(urlParam) + '.jpg';
+        if (DEBUG) { console.log(data);console.log(imgSrc); }
+        var img = new Image();
+        img.width = CONTENT_WIDTH;
+        img.height = CONTENT_HEIGHT;
+        img.addEventListener('load', function(e) {
+            // http://stackoverflow.com/questions/8517879/how-to-rotate-the-existing-content-of-html5-canvas
+            var thumbCanvas = document.createElement("canvas"),
+                thumbCtx = thumbCanvas.getContext("2d");
+            thumbCanvas.width = SNAPSHOT_WIDTH;
+            thumbCanvas.height = SNAPSHOT_HEIGHT;
+            thumbCtx.drawImage(img, 0, 0, SNAPSHOT_WIDTH, SNAPSHOT_HEIGHT);
+            $('#snapshot').empty().append(thumbCanvas);
+            $('#viewport').show();
+
+            $(window).scrollTop(window.LAST_SCROLL_POSITION);
+        });
+        img.src = imgSrc;
+    });
+}
+
 function nativeSnapshot() {
     chrome.runtime.sendMessage({msg: "snapshot"}, function(response) {
-        debugger;
         var img = new Image();
         img.width = CONTENT_WIDTH;
         img.height = CONTENT_HEIGHT;
@@ -143,8 +182,17 @@ function refreshGlobalMetric() {
 
 function bindScrollEvent() {
     $(window).scroll(function(){
+        trackLastScrollPosition();
         scrollByWindow($(this).scrollTop());
     });
+}
+function trackLastScrollPosition() {
+    if (window.SCROLL_TIMEPOUT) {
+      clearTimeout(window.SCROLL_TIMEPOUT);
+    }
+    window.SCROLL_TIMEPOUT = setTimeout(function () {
+        LAST_SCROLL_POSITION = $(window).scrollTop();
+    }, 250, self);
 }
 
 var SCHEDULE_OF_POST_HOOK_RESIZING = -1;
@@ -233,7 +281,6 @@ function initialize() {
     setupSidebar();
     refreshGlobalMetric();
     setupSnapshot();
-    //nativeSnapshot();
     bindScrollEvent();
     bindResizeEvent();
     bindDragEvent();
