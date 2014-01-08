@@ -7,6 +7,7 @@ casper.start();
 // var filename = casper.cli.args[1],
 var width = casper.cli.args[1];
 var height = casper.cli.args[2];
+var zoom = casper.cli.args[3];
 
 //give some time for the page to load
 casper.wait(5000, function() {
@@ -17,7 +18,7 @@ casper.wait(5000, function() {
 
     //set the viewport to the desired height and width
     this.viewport(width, height);
-    casper.thenOpen(url, function() {
+    casper.zoom(zoom).thenOpen(url, function() {
         this.echo('Opening at ' + width + ' x ' + height);
         //Capture selector captures the whole body
         // this.captureSelector(filename, 'body');
