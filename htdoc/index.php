@@ -8,4 +8,4 @@
     $cmd = $path."casperjs /home/chintown/src/chrome/monocle/tools/rasterize_casper.js '$url' $w $h $z";
     exec($cmd, $result);
     //echo $cmd;
-    //var_dump($result);
+    var_dump($result);
