@@ -1,7 +1,4 @@
-// TODO.
-// 1. remove devtool
-
-var DEBUG = true;
+var DEBUG = false;
 
 if (DEBUG) {
     function uploadImage(img) {
