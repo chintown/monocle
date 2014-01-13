@@ -181,6 +181,8 @@ function refreshGlobalMetric() {
     $('#snapshot').height(SNAPSHOT_HEIGHT);
     $('#thumbnail').height(THUMBNAIL_HEIGHT);
 }
+// http://stackoverflow.com/questions/1076231/how-to-get-height-of-the-highest-children-element-in-javascript-jquery
+// http://ryanve.com/lab/dimensions/
 
 function bindScrollEvent() {
     $(window).scroll(function(){
