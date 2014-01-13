@@ -43,7 +43,6 @@
             ]
         }
     ],
-    "devtools_page": "devtools/devtools.html",
     "permissions": [
         "tabs",
         "*://*/*"
