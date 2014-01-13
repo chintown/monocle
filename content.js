@@ -22,6 +22,10 @@ if (DEBUG) {
         $('body').append($line);
         return $line;
     }
+    function exportImage(canvas) {
+        var $img = $('<img/>').attr('src', canvas.toDataURL("image/png"));
+        $('body').append($img);
+    }
 }
 
 // --
@@ -75,6 +79,7 @@ function jsSnapshot() {
             thumbCanvas.width = SNAPSHOT_WIDTH;
             thumbCanvas.height = SNAPSHOT_HEIGHT;
             thumbCtx.drawImage(canvas, 0, 0, SNAPSHOT_WIDTH, SNAPSHOT_HEIGHT);
+            //exportImage(canvas);
             $('#snapshot').empty().append(thumbCanvas);
             $('#viewport').show();
 
