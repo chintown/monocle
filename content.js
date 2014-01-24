@@ -1,5 +1,5 @@
 var DEBUG = false;
-
+var PREFIX = 'monocle-';
 if (DEBUG) {
     function uploadImage(img) {
         var xhr = new XMLHttpRequest(), formData = new FormData();
@@ -31,7 +31,7 @@ if (DEBUG) {
 // --
 
 function setupSidebar() {
-    var $viewport = $('<div></div>').attr('id', 'viewport');
+    var $viewport = $('<div></div>').attr('id', PREFIX+'viewport');
     $viewport.css({
         position: 'fixed',
         top: 0,
@@ -39,12 +39,12 @@ function setupSidebar() {
         right: 0,
         zIndex: 9999999999
     });
-    var $snapshot = $('<div></div>').attr('id', 'snapshot');
+    var $snapshot = $('<div></div>').attr('id', PREFIX+'snapshot');
     $snapshot.css({
         position: 'absolute',
         width: '100%'
     });
-    var $thumbnail = $('<div></div>').attr('id', 'thumbnail');
+    var $thumbnail = $('<div></div>').attr('id', PREFIX+'thumbnail');
     $thumbnail.css({
         position: 'absolute',
         width: '100%',
@@ -177,9 +177,9 @@ function refreshGlobalMetric() {
         });
     }
 
-    $('#viewport').width(SNAPSHOT_WIDTH);
-    $('#snapshot').height(SNAPSHOT_HEIGHT);
-    $('#thumbnail').height(THUMBNAIL_HEIGHT);
+    $('#'+PREFIX+'viewport').width(SNAPSHOT_WIDTH);
+    $('#'+PREFIX+'snapshot').height(SNAPSHOT_HEIGHT);
+    $('#'+PREFIX+'thumbnail').height(THUMBNAIL_HEIGHT);
 }
 // http://stackoverflow.com/questions/1076231/how-to-get-height-of-the-highest-children-element-in-javascript-jquery
 // http://ryanve.com/lab/dimensions/
@@ -207,13 +207,13 @@ function bindResizeEvent() {
     });
 }
 function postHookResizing() {
-    $('#viewport').hide();
+    $('#'+PREFIX+'viewport').hide();
     refreshGlobalMetric();
     setupSnapshot();
 }
 
 function bindDragEvent() {
-    var $thumbnail = $('#thumbnail');
+    var $thumbnail = $('#'+PREFIX+'thumbnail');
     $thumbnail.mousedown(function(initEvt) {
         var start = getMouseYOnVisibleWindow(initEvt);
         var originTop = parseInt($thumbnail.css('top'), 10);
@@ -247,7 +247,7 @@ function bindDragEvent() {
 }
 
 function bindJumpEvent() {
-    $('#snapshot').click(function (evt) {
+    $('#'+PREFIX+'snapshot').click(function (evt) {
         var landing = getMouseYOnVisibleWindow(evt);
         landing -= 0.5 * THUMBNAIL_HEIGHT;
         var updatedY = fixBound(landing, 0, THUMBNAIL_PLAYGROUND);
@@ -268,8 +268,8 @@ function getMouseYOnVisibleWindow(evt) {
 function scrollByWindow(windowTop) {
     var scrollRatio = 1.0 * windowTop / (CONTENT_HEIGHT - VIEWPORT_HEIGHT);
     scrollRatio = fixBound(scrollRatio, 0, 1);
-    $('#snapshot').css('top', 0 - (SNAPSHOT_PLAYGROUND * scrollRatio));
-    $('#thumbnail').css('top', (THUMBNAIL_PLAYGROUND * scrollRatio));
+    $('#'+PREFIX+'snapshot').css('top', 0 - (SNAPSHOT_PLAYGROUND * scrollRatio));
+    $('#'+PREFIX+'thumbnail').css('top', (THUMBNAIL_PLAYGROUND * scrollRatio));
 }
 
 function scrollByThumbnail(newTop) {
@@ -294,7 +294,7 @@ function initialize() {
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     switch(request.msg) {
         case "toggle-extension":
-            var $viewport = $('#viewport');
+            var $viewport = $('#'+PREFIX+'viewport');
             if ($viewport.length === 0) {
                 initialize();
             } else if ($viewport.is(":visible")) {
