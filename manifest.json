@@ -36,6 +36,7 @@
             "matches": [
                 "*://*/*"
             ],
+            "css": ["style.css"],
             "js": [
                 "libs/jquery-2.0.3.min.js",
                 "libs/html2canvas.js",
