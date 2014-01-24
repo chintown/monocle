@@ -80,8 +80,8 @@ function jsSnapshot() {
             thumbCanvas.height = SNAPSHOT_HEIGHT;
             thumbCtx.drawImage(canvas, 0, 0, SNAPSHOT_WIDTH, SNAPSHOT_HEIGHT);
             //exportImage(canvas);
-            $('#snapshot').empty().append(thumbCanvas);
-            $('#viewport').show();
+            $('#'+PREFIX+'snapshot').empty().append(thumbCanvas);
+            $('#'+PREFIX+'viewport').show();
 
             $(window).scrollTop(window.LAST_SCROLL_POSITION);
         },
@@ -112,8 +112,8 @@ function serverSideSnapshot() {
             thumbCanvas.width = SNAPSHOT_WIDTH;
             thumbCanvas.height = SNAPSHOT_HEIGHT;
             thumbCtx.drawImage(img, 0, 0, SNAPSHOT_WIDTH, SNAPSHOT_HEIGHT);
-            $('#snapshot').empty().append(thumbCanvas);
-            $('#viewport').show();
+            $('#'+PREFIX+'snapshot').empty().append(thumbCanvas);
+            $('#'+PREFIX+'viewport').show();
 
             $(window).scrollTop(window.LAST_SCROLL_POSITION);
         });
