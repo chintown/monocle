@@ -21,7 +21,7 @@
     "author": "Mike Chen",
     "background": {
         "scripts": ["background.js"],
-        "persistent": false
+        "persistent": true
     },
     "commands": {
         "toggle-extension": {
