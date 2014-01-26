@@ -24,10 +24,16 @@
         "persistent": true
     },
     "commands": {
-        "toggle-extension": {
-            "description": "toggle-extension",
+        "basic-snapshot": {
+            "description": "basic-snapshot",
             "suggested_key": {
-                "default": "Ctrl+Shift+A"
+                "default": "Alt+A"
+            }
+        },
+        "refined-snapshot": {
+            "description": "refined-snapshot",
+            "suggested_key": {
+                "default": "Alt+Shift+A"
             }
         }
     },
