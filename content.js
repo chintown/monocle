@@ -209,9 +209,9 @@ function refreshGlobalMetric() {
     VIEWPORT_WIDTH = $('html').width();//window.innerWidth;// || document.body.clientWidth;
     VIEWPORT_HEIGHT = window.innerHeight - bookmarkBarHeight;// || document.body.clientHeight;
     // visible content
-    CONTENT_WIDTH = $('html').width();//document.body.scrollWidth;
-    CONTENT_HEIGHT = $('html').height();//document.body.scrollHeight;
-    SNAPSHOT_WIDTH = THUMBNAIL_WIDTH = 200;
+    CONTENT_WIDTH = $('html').width(); //visible width //document.body.scrollWidth;
+    CONTENT_HEIGHT = document.body.scrollHeight; // whole height // $('html').height();
+    SNAPSHOT_WIDTH = THUMBNAIL_WIDTH = 100;
     SNAPSHOT_HEIGHT = SNAPSHOT_WIDTH * CONTENT_HEIGHT / CONTENT_WIDTH;
     SNAPSHOT_PLAYGROUND = (SNAPSHOT_HEIGHT > VIEWPORT_HEIGHT)
                             ? SNAPSHOT_HEIGHT - VIEWPORT_HEIGHT
