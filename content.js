@@ -1,6 +1,6 @@
 var DEBUG = false;
 var PREFIX = 'monocle-';
-if (DEBUG) {
+
     function uploadImage(img) {
         var xhr = new XMLHttpRequest(), formData = new FormData();
         formData.append("user_uploaded", img);
@@ -26,7 +26,6 @@ if (DEBUG) {
         var $img = $('<img/>').attr('src', canvas.toDataURL("image/png"));
         $('body').append($img);
     }
-}
 
 // --
 
