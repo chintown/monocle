@@ -121,20 +121,84 @@ function serverSideSnapshot() {
 }
 
 function nativeSnapshot() {
-    chrome.runtime.sendMessage({msg: "snapshot"}, function(response) {
-        var img = new Image();
-        img.width = CONTENT_WIDTH;
-        img.height = CONTENT_HEIGHT;
-        img.src = response.imgSrc;
-
-        var thumbCanvas = document.createElement("canvas"),
-            thumbCtx = thumbCanvas.getContext("2d");
-        thumbCanvas.width = SNAPSHOT_WIDTH;
-        thumbCanvas.height = SNAPSHOT_HEIGHT;
-        thumbCtx.drawImage(img, 0, 0, SNAPSHOT_WIDTH, SNAPSHOT_HEIGHT);
-        $('#snapshot').empty().append(thumbCanvas);
-        $('#viewport').show();
+    beforeNativeSnapshoted();
+    onNativePartialSnapshoted(); // trick to trigger the first time
+}
+function beforeNativeSnapshoted() {
+    resetCanvas();
+    window.LAST_SCROLL_POSITION_FOR_NATIVE_SNAPSHOT = $(window).scrollTop();
+    window.SNAPSHOT_POSITIONS = getPartialSnapshotPositions();
+    window.RECOVERED_LIST = $('*').filter(function(){
+       return $(this).css('position') === 'fixed';
     });
+    window.RECOVERED_LIST.addClass('monocle-hidden');
+}
+function afterNativeSnapshoted() {
+    $('#'+PREFIX+'viewport').show();
+    window.RECOVERED_LIST.removeClass('monocle-hidden');
+    $(window).scrollTop(window.LAST_SCROLL_POSITION_FOR_NATIVE_SNAPSHOT);
+}
+function onNativePartialSnapshoted() {
+    var arrangements = window.SNAPSHOT_POSITIONS;
+    var shouldStop = arrangements.length === 0;
+    if (shouldStop) {
+        afterNativeSnapshoted();
+        return;
+    }
+    var position = window.SNAPSHOT_POSITIONS.shift();
+    var offsetY = position[1];
+    $(window).scrollTop(offsetY);
+    window.setTimeout(function() {
+        nativePartialSnapshot(offsetY, onNativePartialSnapshoted);
+    }, 10);
+}
+function resetCanvas() {
+    var thumbCanvas = document.createElement("canvas");
+    thumbCanvas.setAttribute("id", "canvas-native");
+    thumbCanvas.width = SNAPSHOT_WIDTH;
+    thumbCanvas.height = SNAPSHOT_HEIGHT;
+    $('#'+PREFIX+'snapshot').empty().append(thumbCanvas);
+}
+function nativePartialSnapshot(screenOffsetY, callback) {
+    var snapshotOffsetY = SNAPSHOT_HEIGHT * screenOffsetY / CONTENT_HEIGHT;
+    if (DEBUG) {
+        console.table({
+            field: ['position'],
+            content: [screenOffsetY],
+            snapshot: [snapshotOffsetY],
+        });
+        ////$('#'+PREFIX+'viewport').show();
+    }
+
+    chrome.runtime.sendMessage({msg: "snapshot"}, function(dataUrl) {
+        console.assert(dataUrl !== null, 'empty snapshot');
+        var img = new Image();
+        img.width = VIEWPORT_WIDTH;
+        img.height = CONTENT_HEIGHT;
+        img.src = dataUrl;
+
+        var ctx = $('#canvas-native').get(0).getContext("2d");
+        ctx.drawImage(img, 0, snapshotOffsetY, THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT);
+
+        callback();
+    });
+}
+
+function getPartialSnapshotPositions() {
+    var arrangements = [],
+        // pad the vertical scrolling to try to deal with
+        // sticky headers, 250 is an arbitrary size
+        scrollPad = 200,
+        yDelta = VIEWPORT_HEIGHT - (VIEWPORT_HEIGHT > scrollPad ? scrollPad : 0),
+        yPos = CONTENT_HEIGHT - VIEWPORT_HEIGHT
+        ;
+
+    while (yPos > -yDelta) {
+        arrangements.push([0, yPos < 0 ? 0 : yPos]);
+        yPos -= yDelta;
+    }
+    if (DEBUG) {console.table(arrangements);}
+    return arrangements;
 }
 
 function refreshGlobalMetric() {
