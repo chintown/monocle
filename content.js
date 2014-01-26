@@ -59,8 +59,10 @@ function setupSidebar() {
 function setupSnapshot() {
     LAST_SCROLL_POSITION = $(window).scrollTop();
 
-    jsSnapshot();
-    serverSideSnapshot();
+    window.SELECTED_SNAPSHOT_METHOD();
+    // jsSnapshot();
+    // serverSideSnapshot();
+    // nativeSnapshot();
 }
 function jsSnapshot() {
     // http://html2canvas.hertzen.com/documentation.html
@@ -356,15 +358,19 @@ function initialize() {
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     switch(request.msg) {
-        case "toggle-extension":
-            var $viewport = $('#'+PREFIX+'viewport');
-            if ($viewport.length === 0) {
-                initialize();
-            } else if ($viewport.is(":visible")) {
-                $viewport.hide();
-            } else {
-                $viewport.show();
-            }
+        case "basic":
+            window.SELECTED_SNAPSHOT_METHOD = jsSnapshot;
             break;
+        case "refined":
+            window.SELECTED_SNAPSHOT_METHOD = nativeSnapshot;
+            break;
+    }
+    var $viewport = $('#'+PREFIX+'viewport');
+    if ($viewport.length === 0) {
+        initialize();
+    } else if ($viewport.is(":visible")) {
+        $viewport.hide();
+    } else {
+        $viewport.show();
     }
 });
