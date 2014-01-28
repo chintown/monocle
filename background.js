@@ -18,7 +18,7 @@ function cbSnapshot(callback) {
 }
 
 chrome.browserAction.onClicked.addListener(function(tab) {
-    chrome.tabs.sendMessage(tab.id, {msg: 'toggle-extension'});
+    chrome.tabs.sendMessage(tab.id, {msg: 'basic'});
 });
 
 chrome.commands.onCommand.addListener(function(command) {

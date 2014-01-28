@@ -360,7 +360,7 @@ function initialize() {
     bindJumpEvent();
 }
 
-window.PREVIOUS_METHOD;
+window.PREVIOUS_METHOD = window.SELECTED_SNAPSHOT_METHOD = null;
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     switch(request.msg) {
         case "basic":
