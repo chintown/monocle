@@ -277,13 +277,15 @@ function postHookResizing() {
 }
 
 function bindDragEvent() {
+    var monocleTempMousemove;
     var $thumbnail = $('#'+PREFIX+'thumbnail');
     $thumbnail.mousedown(function(initEvt) {
         var start = getMouseYOnVisibleWindow(initEvt);
         var originTop = parseInt($thumbnail.css('top'), 10);
         if (DEBUG) {drawLineAtTop(originTop);}
         originTop = isNaN(originTop) ? 0 : originTop;
-        $(window).mousemove(function(movingEvt) {
+
+        monocleTempMousemove = function (movingEvt) {
             var offset = (getMouseYOnVisibleWindow(movingEvt)) - start;
             var newTop = originTop + offset;
             newTop = fixBound(newTop, 0, THUMBNAIL_PLAYGROUND);
@@ -298,16 +300,19 @@ function bindDragEvent() {
             // disable window moving
             movingEvt.stopPropagation();
             return false;
-        });
-        $(document).mousedown(function(e){
-            // disable text selection
-            e.preventDefault();
-        });
+        };
+
+        $(window).mousemove(monocleTempMousemove);
+        $(document).mousedown(monocleTempMousedown);
     });
     $(window).mouseup(function() {
-        $(window).unbind("mousemove");
-        $(document).unbind("mousemove");
+        $(window).unbind("mousemove", monocleTempMousemove);
+        $(document).unbind("mousedown", monocleTempMousedown);
     });
+}
+function monocleTempMousedown(e){
+    // disable text selection
+    e.preventDefault();
 }
 
 function bindJumpEvent() {
