@@ -204,10 +204,9 @@ function getPartialSnapshotPositions() {
 }
 
 function refreshGlobalMetric() {
-    var bookmarkBarHeight = 15;
     SUPPRESS_CUSTOMIZED_SCROLL = false;
     VIEWPORT_WIDTH = $('html').width();//window.innerWidth;// || document.body.clientWidth;
-    VIEWPORT_HEIGHT = window.innerHeight - bookmarkBarHeight;// || document.body.clientHeight;
+    VIEWPORT_HEIGHT = window.innerHeight;// || document.body.clientHeight;
     // visible content
     CONTENT_WIDTH = $('html').width(); //visible width //document.body.scrollWidth;
     CONTENT_HEIGHT = document.body.scrollHeight; // whole height // $('html').height();
