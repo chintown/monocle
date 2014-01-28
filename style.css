@@ -1,3 +1,6 @@
 .monocle-hidden {
     display: none !important;
 }
+#monocle-snapshot {
+    box-shadow: -5px 5px 60px #808080;
+}
