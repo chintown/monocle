@@ -356,6 +356,7 @@ function initialize() {
     bindJumpEvent();
 }
 
+window.PREVIOUS_METHOD;
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     switch(request.msg) {
         case "basic":
@@ -365,7 +366,15 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
             window.SELECTED_SNAPSHOT_METHOD = nativeSnapshot;
             break;
     }
+    var isChangingMethod = (window.SELECTED_SNAPSHOT_METHOD != window.PREVIOUS_METHOD);
+    window.PREVIOUS_METHOD = window.SELECTED_SNAPSHOT_METHOD;
     var $viewport = $('#'+PREFIX+'viewport');
+
+    if (isChangingMethod) {
+        $viewport.remove();
+        $viewport = [];
+    }
+
     if ($viewport.length === 0) {
         initialize();
     } else if ($viewport.is(":visible")) {
