@@ -3,7 +3,7 @@
     "name": "Scroll Preview",
     "version": "1.0",
 
-    "description": "Scroll Preview integrates whole-page preview with scrollbar that inspired by Sublime Text's mini map.",
+    "description": "Scroll Preview integrates a whole-page preview with scrollbar that inspired by Sublime Text's mini map.",
     "icons": {
         "16": "icons/monocle-16.png",
         "48": "icons/monocle-48.png",
