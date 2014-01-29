@@ -56,6 +56,11 @@ function setupSidebar() {
     $('body').append($viewport);
 }
 
+function setupJsSnapshot() {
+    LAST_SCROLL_POSITION = $(window).scrollTop();
+
+    jsSnapshot();
+}
 function setupSnapshot() {
     LAST_SCROLL_POSITION = $(window).scrollTop();
 
@@ -273,7 +278,8 @@ function bindResizeEvent() {
 function postHookResizing() {
     $('#'+PREFIX+'viewport').hide();
     refreshGlobalMetric();
-    setupSnapshot();
+    setupJsSnapshot();
+    window.PREVIOUS_METHOD = jsSnapshot;
 }
 
 function bindDragEvent() {
