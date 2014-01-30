@@ -6,6 +6,8 @@ chrome.runtime.onMessage.addListener(function(request, sender, callback) {
     switch(request.msg) {
         case "snapshot":
             cbSnapshot(callback);
+        case "track":
+            trackEvent(request);
         break;
     }
     return true;
@@ -19,6 +21,7 @@ function cbSnapshot(callback) {
 
 chrome.browserAction.onClicked.addListener(function(tab) {
     chrome.tabs.sendMessage(tab.id, {msg: 'basic'});
+    trackEvent({'name': 'input', 'detail': 'mouse'});
 });
 
 chrome.commands.onCommand.addListener(function(command) {
@@ -34,4 +37,33 @@ chrome.commands.onCommand.addListener(function(command) {
             });
             break;
     }
+    trackEvent({'name': 'input', 'detail': 'keyboard'});
 });
+
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-1108382-9']);
+_gaq.push(['_trackPageview']);
+
+(function() {
+  var ga = document.createElement('script');
+  ga.type = 'text/javascript';
+  ga.async = true;
+  ga.src = 'https://ssl.google-analytics.com/ga.js';
+  var s = document.getElementsByTagName('script')[0];
+  s.parentNode.insertBefore(ga, s);
+})();
+
+/**
+ * Track a click on a button using the asynchronous tracking API.
+ *
+ * See http://code.google.com/apis/analytics/docs/tracking/asyncTracking.html
+ * for information on how to use the asynchronous tracking API.
+ */
+function trackEvent(eventMeta) {
+    console.log(eventMeta);
+    if (eventMeta.detail) {
+        _gaq.push(['_trackEvent', eventMeta.name, eventMeta.detail, '']);
+    } else {
+        _gaq.push(['_trackEvent', eventMeta.name, '', '']);
+    }
+}

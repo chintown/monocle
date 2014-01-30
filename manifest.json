@@ -56,5 +56,6 @@
     ],
     "web_accessible_resources": [
         "libs/jquery-2.0.3.min.map"
-    ]
+    ],
+    "content_security_policy": "script-src 'self' https://ssl.google-analytics.com; object-src 'self'"
 }

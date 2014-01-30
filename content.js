@@ -387,9 +387,12 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 
     if ($viewport.length === 0) {
         initialize();
+        chrome.runtime.sendMessage({msg: "track", name: "functionality", detail: request.msg}, function() {});
     } else if ($viewport.is(":visible")) {
         $viewport.hide();
+        chrome.runtime.sendMessage({msg: "track", name: "functionality", detail: "hide"}, function() {});
     } else {
         $viewport.show();
+        chrome.runtime.sendMessage({msg: "track", name: "functionality", detail: "show"}, function() {});
     }
 });
