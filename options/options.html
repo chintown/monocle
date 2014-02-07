@@ -1,0 +1,75 @@
+
+<html>
+  <head>
+    <title>Scroll Preview Options</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <script type="text/javascript" src="../libs/jquery-2.0.3.min.js"></script>
+    <script type="text/javascript" src="options.js"></script>
+    <link rel="stylesheet" href="options.css" type="text/css">
+  </head>
+  <body>
+    <div id="wrap">
+      <div id="tabMenu">
+        <h1>Scroll Preview Options</h1>
+        <ul class="menu">
+          <li><a href="#basics">Basics</a></li>
+          <li><a href="#experiments">Experiments</a></li>
+        </ul>
+        <div class='separator'></div>
+        <div id="footer">
+          <a target='_blank' href="https://github.com/chintown/monocle/wiki">FAQ</a> ·
+          <a target='_blank' href="https://github.com/chintown/monocle/issues">Issues</a> ·
+          <a target='_blank' href="https://github.com/chintown/monocle/blob/master/CHANGES.md">Changelog</a>
+        </div>
+      </div>
+      <div id="options">
+        <div id="basics">
+          <h2>Basics</h2>
+          <div class="option-section">
+            <h3>Accessibility</h3>
+            <div class="option-subsection">
+              <div>
+                <span class="option-field">Keyboard Shortcut</span>
+                <div class='option-value'>
+                  <select name="shortcutMetaKey">
+                    <option value="ctrl">Ctrl</option>
+                    <option value="shift">Shift</option>
+                    <option value="alt">Alt</option>
+                    <option value="none">None</option>
+                  </select>
+                  + <input type="text" name="shortcutKeyCharacter" value="e" size="1" />
+                  <input type="hidden" name="shortcutKey" />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="option-section">
+            <h3>Extension Button</h3>
+            <div class="option-subsection">
+              <label><input type="radio" name="mode" value="basic" /> triggers the functionality for current tab once.</label>
+              <br>
+              <label><input type="radio" name="mode" value="advanced" /> toggles between "Auto" or "Manual" mode for all tabs.</label>
+              <p>* <b>Auto</b> mode saves key strokes while you focus on article pages<br/>
+              * <b>Manual</b> mode keeps quiet while you don't need it (e.g Gmail)</p>
+            </div>
+          </div>
+        </div>
+
+
+        <div id="experiments">
+          <h2>Experiments</h2>
+          <div class="option-section">
+            <h3>Magnifier</h3>
+            <div class="option-subsection">
+              <div>
+                <label>
+                  <input type="checkbox" name="useMagnifier" />
+                  <span class="option-field">Shows a enlarged thumb while mouse hovers on the scroll bar.</span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+  </body>
+</html>
