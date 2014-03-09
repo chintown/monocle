@@ -203,3 +203,7 @@ ul.menu li.tabActive a {
   border-color: #C3C3C3;
   text-align: right;
 }
+
+#shortcut {
+  text-align: center;
+}

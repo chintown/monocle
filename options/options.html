@@ -31,13 +31,14 @@
               <div>
                 <span class="option-field">Keyboard Shortcut</span>
                 <div class='option-value'>
-                  <select name="shortcutMetaKey">
+                  <span>Alt / Alt + Shift</span>
+                  <!-- <select name="shortcutMetaKey">
                     <option value="ctrl">Ctrl</option>
                     <option value="shift">Shift</option>
                     <option value="alt">Alt</option>
                     <option value="none">None</option>
-                  </select>
-                  + <input type="text" name="shortcutKeyCharacter" value="e" size="1" />
+                  </select> -->
+                  + <input id="shortcut" type="text" name="shortcutKeyCharacter" value="a" size="1" />
                   <input type="hidden" name="shortcutKey" />
                 </div>
               </div>
@@ -46,9 +47,9 @@
           <div class="option-section">
             <h3>Extension Button</h3>
             <div class="option-subsection">
-              <label><input type="radio" name="mode" value="basic" /> triggers the functionality for current tab once.</label>
+              <label><input id="app_basic" type="radio" name="mode" value="basic" /> triggers the functionality for current tab once.</label>
               <br>
-              <label><input type="radio" name="mode" value="advanced" /> toggles between "Auto" or "Manual" mode for all tabs.</label>
+              <label><input id="app_advanced" type="radio" name="mode" value="advanced" /> toggles between "Auto" or "Manual" mode for all tabs.</label>
               <p>* <b>Auto</b> mode saves key strokes while you focus on article pages<br/>
               * <b>Manual</b> mode keeps quiet while you don't need it (e.g Gmail)</p>
             </div>
@@ -63,7 +64,7 @@
             <div class="option-subsection">
               <div>
                 <label>
-                  <input type="checkbox" name="useMagnifier" />
+                  <input id="magnifier" type="checkbox" name="useMagnifier" />
                   <span class="option-field">Shows a enlarged thumb while mouse hovers on the scroll bar.</span>
                 </label>
               </div>
