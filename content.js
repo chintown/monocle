@@ -353,7 +353,11 @@ function scrollByThumbnail(newTop) {
 }
 
 $(document).ready(function () {
-    // initialize();
+    chrome.runtime.sendMessage({msg: "land"}, function(isAutoOn) {
+        if (isAutoOn) {
+            eventDispatcher('basic');
+        }
+    });
 });
 
 function initialize() {
@@ -368,12 +372,18 @@ function initialize() {
 
 window.PREVIOUS_METHOD = window.SELECTED_SNAPSHOT_METHOD = null;
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-    switch(request.msg) {
+    eventDispatcher(request.msg);
+});
+
+function eventDispatcher(action) {
+    switch(action) {
         case "basic":
             window.SELECTED_SNAPSHOT_METHOD = jsSnapshot;
             break;
         case "refined":
             window.SELECTED_SNAPSHOT_METHOD = nativeSnapshot;
+            break;
+        default:
             break;
     }
     var isChangingMethod = (window.SELECTED_SNAPSHOT_METHOD != window.PREVIOUS_METHOD);
@@ -395,4 +405,4 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
         $viewport.show();
         chrome.runtime.sendMessage({msg: "track", name: "functionality", detail: "show"}, function() {});
     }
-});
+}
