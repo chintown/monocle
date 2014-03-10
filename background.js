@@ -29,7 +29,9 @@ chrome.runtime.onMessage.addListener(function(request, sender, callback) {
             trackEvent(request);
             break;
         case "land":
-            callback(window.USER_SETTINGS['last_auto_status']);
+            var autoEnabledAndOn = window.USER_SETTINGS['last_auto_status']
+                && window.USER_SETTINGS['button_functionality'] === 'advanced';
+            callback(autoEnabledAndOn);
             break;
         default:
             break;
