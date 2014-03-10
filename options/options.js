@@ -48,10 +48,15 @@ function bindUiWithSettings() {
   document.getElementById('app_advanced').addEventListener('change', function (e) {
     updateSetting('button_functionality', 'advanced');
 
+    chrome.browserAction.setBadgeBackgroundColor({color:[255, 0, 0, 0]});
+    chrome.browserAction.setBadgeText({text:"on"});
+
     trackEvent({'name': 'option', 'detail': 'button_functionality.advanced'});
   });
   document.getElementById('app_basic').addEventListener('change', function (e) {
     updateSetting('button_functionality', 'basic');
+
+    chrome.browserAction.setBadgeText({text:""});
 
     trackEvent({'name': 'option', 'detail': 'button_functionality.basic'});
   });
