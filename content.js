@@ -353,8 +353,8 @@ function scrollByThumbnail(newTop) {
 }
 
 $(document).ready(function () {
-    chrome.runtime.sendMessage({msg: "land"}, function(isAutoOn) {
-        if (isAutoOn) {
+    chrome.runtime.sendMessage({msg: "land"}, function(isAutoEnabledAndOn) {
+        if (isAutoEnabledAndOn) {
             eventDispatcher('basic');
         }
     });
@@ -397,7 +397,7 @@ function eventDispatcher(action) {
 
     if ($viewport.length === 0) {
         initialize();
-        chrome.runtime.sendMessage({msg: "track", name: "functionality", detail: request.msg}, function() {});
+        chrome.runtime.sendMessage({msg: "track", name: "functionality", detail: action}, function() {});
     } else if ($viewport.is(":visible")) {
         $viewport.hide();
         chrome.runtime.sendMessage({msg: "track", name: "functionality", detail: "hide"}, function() {});
