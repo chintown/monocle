@@ -9,8 +9,39 @@ function loadScript(script, callback) {
     document.head.appendChild(el);
 }
 loadScript('common/user_settings.js', function () {
-    loadSettings();
+    loadSettings(function () {
+        toggleAuto();
+    });
 });
+
+// ---------------------------------------------------------------------
+function toggleAuto() {
+    window.USER_SETTINGS['last_auto_status'] =
+        window.USER_SETTINGS['last_auto_status']
+        ? false : true;
+    updateAuto();
+}
+function updateAuto() {
+    if (window.USER_SETTINGS['last_auto_status']) {
+        turnAutoOn();
+        trackEvent({'name': 'option', 'detail': 'auto_status.on'});
+    } else {
+        turnAutoOff();
+        trackEvent({'name': 'option', 'detail': 'auto_status.off'});
+    }
+}
+function turnAutoOn() {
+    chrome.browserAction.setBadgeBackgroundColor({color:[255, 0, 0, 0]});
+    chrome.browserAction.setBadgeText({text:"on"});
+    updateSetting('last_auto_status', true);
+}
+function turnAutoOff() {
+    chrome.browserAction.setBadgeBackgroundColor({color:[190, 190, 190, 230]});
+    chrome.browserAction.setBadgeText({text:"off"});
+    updateSetting('last_auto_status', false);
+}
+
+// ---------------------------------------------------------------------
 
 chrome.runtime.onMessage.addListener(function(request, sender, callback) {
     switch(request.msg) {
@@ -30,8 +61,13 @@ function cbSnapshot(callback) {
 }
 
 chrome.browserAction.onClicked.addListener(function(tab) {
-    chrome.tabs.sendMessage(tab.id, {msg: 'basic'});
+    if (window.USER_SETTINGS['button_functionality'] === 'advanced') {
+        toggleAuto();
+    } else {
+        chrome.tabs.sendMessage(tab.id, {msg: 'basic'});
+    }
     trackEvent({'name': 'input', 'detail': 'mouse'});
+
 });
 
 chrome.commands.onCommand.addListener(function(command) {
@@ -49,6 +85,8 @@ chrome.commands.onCommand.addListener(function(command) {
     }
     trackEvent({'name': 'input', 'detail': 'keyboard'});
 });
+
+// ---------------------------------------------------------------------
 
 var _gaq = _gaq || [];
 _gaq.push(['_setAccount', 'UA-1108382-9']);
