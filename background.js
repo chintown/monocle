@@ -47,9 +47,15 @@ chrome.runtime.onMessage.addListener(function(request, sender, callback) {
     switch(request.msg) {
         case "snapshot":
             cbSnapshot(callback);
+            break;
         case "track":
             trackEvent(request);
-        break;
+            break;
+        case "land":
+            callback(window.USER_SETTINGS['last_auto_status']);
+            break;
+        default:
+            break;
     }
     return true;
 });
@@ -81,6 +87,8 @@ chrome.commands.onCommand.addListener(function(command) {
             chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
                 chrome.tabs.sendMessage(tabs[0].id, {msg: 'refined'});
             });
+            break;
+        default:
             break;
     }
     trackEvent({'name': 'input', 'detail': 'keyboard'});
