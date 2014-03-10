@@ -92,6 +92,12 @@ li.option:first-of-type {
   -webkit-box-flex: 1;
 }
 
+.option-note {
+  line-height: 1rem;
+  font-size: smaller;
+  margin-left: 40px;
+}
+
 .alert {
   position: relative;
   left: -2px;
