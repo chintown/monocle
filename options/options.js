@@ -4,7 +4,10 @@ $(document).ready(function() {
 
 function init() {
   initializeTabs();
-  loadSettings();
+  loadSettings(function () {
+    updateUiWithSettings();
+    bindUiWithSettings();
+  });
 }
 
 function initializeTabs() {
@@ -23,45 +26,8 @@ function initializeTabs() {
   });
 }
 
-function loadSettings() {
-  var expectedNames = [
-    'keyboard_shortcut',
-    'button_functionality',
-    'magnifier'
-  ]
-  chrome.storage.local.get(expectedNames, function(settings) {
-    window.SETTINGS = settings || {};
-
-    initSettings();
-    dumpSettings();
-    updateUiWithSettings();
-    bindUiWithSettings();
-  });
-}
-function initSettings() {
-  setDefaultValue('keyboard_shortcut', 'a');
-  setDefaultValue('button_functionality', 'basic');
-  setDefaultValue('magnifier', false);
-  saveSettings();
-}
-function updateSetting(name, value) {
-  window.SETTINGS[name] = value;
-  saveSettings();
-}
-function saveSettings() {
-  dumpSettings();
-  chrome.storage.local.set(window.SETTINGS);
-}
-function setDefaultValue(name, value) {
-  if (!window.SETTINGS[name]) {
-    window.SETTINGS[name] = value;
-  }
-}
-function dumpSettings() {
-  console.log(window.SETTINGS);
-}
 function updateUiWithSettings() {
-  var s = window.SETTINGS;
+  var s = window.USER_SETTINGS;
   document.getElementById('shortcut').value = s['keyboard_shortcut'];
   if (s['button_functionality'] === 'advanced') {
     document.getElementById('app_advanced').checked = true;
