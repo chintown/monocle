@@ -2,6 +2,16 @@
 //     chrome.pageAction.show(tab.id);
 // });
 
+function loadScript(script, callback) {
+    var el = document.createElement('script');
+    el.src = chrome.extension.getURL(script);
+    el.addEventListener('load', callback, false);
+    document.head.appendChild(el);
+}
+loadScript('common/user_settings.js', function () {
+    loadSettings();
+});
+
 chrome.runtime.onMessage.addListener(function(request, sender, callback) {
     switch(request.msg) {
         case "snapshot":
