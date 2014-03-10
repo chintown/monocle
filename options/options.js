@@ -29,8 +29,9 @@ function initializeTabs() {
 
 function updateUiWithSettings() {
   var s = window.USER_SETTINGS;
-  document.getElementById('shortcut').value = s['keyboard_shortcut'];
+  // document.getElementById('shortcut').value = s['keyboard_shortcut'];
   if (s['button_functionality'] === 'advanced') {
+
     document.getElementById('app_advanced').checked = true;
   } else {
     document.getElementById('app_basic').checked = true;
@@ -40,11 +41,11 @@ function updateUiWithSettings() {
   }
 }
 function bindUiWithSettings() {
-  document.getElementById('shortcut').addEventListener('blur', function (e) {
-    updateSetting('keyboard_shortcut', e.target.value);
+  // document.getElementById('shortcut').addEventListener('blur', function (e) {
+  //   updateSetting('keyboard_shortcut', e.target.value);
 
-    trackEvent({'name': 'option', 'detail': 'keyboard_shortcut.'+e.target.value});
-  });
+  //   trackEvent({'name': 'option', 'detail': 'keyboard_shortcut.'+e.target.value});
+  // });
   document.getElementById('app_advanced').addEventListener('change', function (e) {
     updateSetting('button_functionality', 'advanced');
 
