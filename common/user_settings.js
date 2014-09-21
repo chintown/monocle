@@ -1,4 +1,5 @@
 function loadSettings(callback) {
+  log('loadSettings');
   var expectedNames = [
     'keyboard_shortcut',
     'button_functionality',
@@ -9,12 +10,12 @@ function loadSettings(callback) {
     window.USER_SETTINGS = settings || {};
 
     initSettings();
-    dumpSettings('loaded');
 
     callback();
   });
 }
 function initSettings() {
+  log('initSettings');
   var isDirty = false;
   isDirty = putDefaultSetting('keyboard_shortcut', 'a') || isDirty;
   isDirty = putDefaultSetting('button_functionality', 'basic') || isDirty;
@@ -25,14 +26,17 @@ function initSettings() {
   }
 }
 function updateSetting(name, value) {
+  log('updateSetting', name, value);
   window.USER_SETTINGS[name] = value;
   saveSettings();
 }
 function saveSettings() {
+  log('saveSettings');
   dumpSettings('saved');
   chrome.storage.local.set(window.USER_SETTINGS);
 }
 function putDefaultSetting(name, value) {
+  log('putDefaultSetting', name, value);
   if (!window.USER_SETTINGS[name]) {
     window.USER_SETTINGS[name] = value;
     return true;
@@ -40,5 +44,6 @@ function putDefaultSetting(name, value) {
   return false;
 }
 function dumpSettings(context) {
+  log('dumpSettings');
   console.log(window.USER_SETTINGS, context);
 }

@@ -3,6 +3,7 @@ $(document).ready(function() {
 });
 
 function init() {
+  log('init');
   initializeTabs();
   loadSettings(function () {
     updateUiWithSettings();
@@ -12,6 +13,7 @@ function init() {
 }
 
 function initializeTabs() {
+  log('initializeTabs');
   $('ul.menu li:first').addClass('tabActive').show();
   $('#options > div').hide();
   $('#basics').show();
@@ -28,6 +30,7 @@ function initializeTabs() {
 }
 
 function updateUiWithSettings() {
+  log('updateUiWithSettings');
   var s = window.USER_SETTINGS;
   // document.getElementById('shortcut').value = s['keyboard_shortcut'];
   if (s['button_functionality'] === 'advanced') {
@@ -41,6 +44,7 @@ function updateUiWithSettings() {
   }
 }
 function bindUiWithSettings() {
+  log('bindUiWithSettings');
   // document.getElementById('shortcut').addEventListener('blur', function (e) {
   //   updateSetting('keyboard_shortcut', e.target.value);
 
@@ -90,7 +94,7 @@ _gaq.push(['_trackPageview']);
  * for information on how to use the asynchronous tracking API.
  */
 function trackEvent(eventMeta) {
-    console.log(eventMeta);
+    log('trackEvent', eventMeta);
     if (eventMeta.detail) {
         _gaq.push(['_trackEvent', eventMeta.name, eventMeta.detail, '']);
     } else {
