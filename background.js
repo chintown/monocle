@@ -34,6 +34,9 @@ chrome.runtime.onMessage.addListener(function(request, sender, callback) {
                 && window.USER_SETTINGS['button_functionality'] === 'advanced';
             callback(autoEnabledAndOn);
             break;
+        case "reload":
+            window.USER_SETTINGS = request.detail;
+            break;
         default:
             break;
     }
