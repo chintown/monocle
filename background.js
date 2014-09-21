@@ -13,7 +13,7 @@ function loadScript(script, callback) {
 loadScript('common/dev.js', function () {
     loadScript('common/user_settings.js', function () {
         loadSettingsFromStorage(function () {
-            updateAuto();
+            applyAutoSetting();
         });
     });
 });
@@ -46,7 +46,7 @@ chrome.browserAction.onClicked.addListener(function(tab) {
     if (window.USER_SETTINGS['button_functionality'] === 'advanced') {
         toggleAutoSetting();
     } else {
-        turnAutoDisabled();
+        turnAutoMarkHide();
         chrome.tabs.sendMessage(tab.id, {msg: 'basic'});
     }
     trackEvent({'name': 'input', 'detail': 'mouse'});
@@ -78,34 +78,33 @@ chrome.commands.onCommand.addListener(function(command) {
 function toggleAutoSetting() {
     log('toggleAutoSetting');
     window.USER_SETTINGS['last_auto_status'] =
-        window.USER_SETTINGS['last_auto_status']
-        ? false : true;
-    updateAuto();
+        !window.USER_SETTINGS['last_auto_status'];
+    applyAutoSetting();
 }
-function updateAuto() {
-    log('updateAuto', window.USER_SETTINGS['last_auto_status']);
+function applyAutoSetting() {
+    log('applyAutoSetting', window.USER_SETTINGS['last_auto_status']);
     if (window.USER_SETTINGS['last_auto_status']) {
-        turnAutoOn();
+        turnAutoMarkOn();
         trackEvent({'name': 'option', 'detail': 'auto_status.on'});
     } else {
-        turnAutoOff();
+        turnAutoMarkOff();
         trackEvent({'name': 'option', 'detail': 'auto_status.off'});
     }
 }
-function turnAutoOn() {
-    log('turnAutoOn');
+function turnAutoMarkOn() {
+    log('turnAutoMarkOn');
     chrome.browserAction.setBadgeBackgroundColor({color:[255, 0, 0, 0]});
     chrome.browserAction.setBadgeText({text:"on"});
     updateSetting('last_auto_status', true);
 }
-function turnAutoOff() {
-    log('turnAutoOff');
+function turnAutoMarkOff() {
+    log('turnAutoMarkOff');
     chrome.browserAction.setBadgeBackgroundColor({color:[190, 190, 190, 230]});
     chrome.browserAction.setBadgeText({text:"off"});
     updateSetting('last_auto_status', false);
 }
-function turnAutoDisabled() {
-    log('turnAutoDisabled');
+function turnAutoMarkHide() {
+    log('turnAutoMarkHide');
     chrome.browserAction.setBadgeText({text:""});
 }
 
