@@ -53,7 +53,7 @@ a:hover {
   color: #294266;
 }
 
-ul {
+ol, ul {
   margin: 0;
   padding: 0;
 }
