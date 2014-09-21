@@ -1,5 +1,5 @@
-function loadSettings(callback) {
-  log('loadSettings');
+function loadSettingsFromStorage(callback) {
+  log('loadSettingsFromStorage');
   var expectedNames = [
     'keyboard_shortcut',
     'button_functionality',
@@ -10,7 +10,7 @@ function loadSettings(callback) {
     window.USER_SETTINGS = settings || {};
     completeSettings();
 
-  log('loadSettings', 'END');
+  log('loadSettingsFromStorage', 'END');
     callback();
   });
 }

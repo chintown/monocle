@@ -5,7 +5,7 @@ $(document).ready(function() {
 function init() {
   log('init');
   initializeTabs();
-  loadSettings(function () {
+  loadSettingsFromStorage(function () {
     updateUiWithSettings();
     bindUiWithSettings();
     trackEvent({'name': 'option', 'detail': 'enter'});

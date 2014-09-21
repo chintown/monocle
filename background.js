@@ -12,7 +12,7 @@ function loadScript(script, callback) {
 }
 loadScript('common/dev.js', function () {
     loadScript('common/user_settings.js', function () {
-        loadSettings(function () {
+        loadSettingsFromStorage(function () {
             updateAuto();
         });
     });
