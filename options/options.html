@@ -44,16 +44,44 @@
             <h3>How it works</h3>
             <div class="option-subsection">
               <label><input id="app_basic" type="radio" name="mode" value="basic" /> <b>Manually</b>. You decide when to use it.</label>
-              <ol class="option-note">
-                <li>You can generata a preview by either pressing keyboard shortcuts (<code>alt + A</code> or <code>alt + shift + A</code>), or clicking extension button (<img src="../icons/monocle-16.png">).</li>
-                <li>If preview exists, clicking extension button (<img src="../icons/monocle-16.png">) just toggle it's visibility.</li>
-              </ol>
-              <br>
-              <label><input id="app_advanced" type="radio" name="mode" value="advanced" /> <b>Automatically</b>. It generates a preview for every new page.</label>
               <ul class="option-note">
-                <li>It's convenient if you need to read lots of articles.</li>
-                <li>Clicking extension (<img src="../icons/monocle-16.png">) can disable the automation (it will work as manual mode).</li>
+                <li>Clicking extension button (<img src="../icons/monocle-16.png">) will generate a preview of current page.</li>
+                <li>If the preview is generated, clicking extension button (<img src="../icons/monocle-16.png">) just toggle it's visibility.</li>
               </ul>
+              <br>
+              <label><input id="app_advanced" type="radio" name="mode" value="advanced" /> <b>Automatically</b>. It's convenient when you need to read a lot.</label>
+              <ul class="option-note">
+                <li>Preview is automatically generated for every new page.</li>
+                <li>Clicking extension button (<img src="../icons/monocle-16.png">) can turn off the automation.</li>
+              </ul>
+            </div>
+          </div>
+          <div class="option-section">
+            <h3>Preview Type</h3>
+            <div class="option-subsection">
+              <label><b>Simple</b> — Fast. But it can not display <i>external images</i>.</label>
+              <ul class="option-note">
+                <li>It's default behavior.</li>
+                <li>It uses <code>html canvas</code>.</li>
+                <li>It's limited by <a href="http://en.wikipedia.org/wiki/Same-origin_policy">same-origin policy</a>.</li>
+              </ul>
+              <br>
+              <label><b>Refined</b> — Slow. But it reflects all the details.</label>
+              <ul class="option-note">
+                <li>It's only available through keyboard shortcut.</li>
+                <li>It uses <code>Chrome Snapshot API</code></li>
+                <li>It generates result page by page incrementally.</li>
+              </ul>
+              <br>
+            </div>
+          </div>
+          <div class="option-section">
+            <h3>Keyboard Shortcuts</h3>
+            <div class="option-subsection">
+              <label><b><code>Alt + A</code></b> — <b>Simple</b> preview</label>
+              <br>
+              <label><b><code>Alt + Shift + A</code></b> — <b>Refined</b> preview</label>
+              <br>
             </div>
           </div>
         </div>
