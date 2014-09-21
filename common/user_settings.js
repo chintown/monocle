@@ -8,42 +8,44 @@ function loadSettings(callback) {
   ]
   chrome.storage.local.get(expectedNames, function(settings) {
     window.USER_SETTINGS = settings || {};
+    completeSettings();
 
-    initSettings();
-
+  log('loadSettings', 'END');
     callback();
   });
 }
-function initSettings() {
-  log('initSettings');
+function completeSettings() {
+  log('completeSettings');
   var isDirty = false;
-  isDirty = putDefaultSetting('keyboard_shortcut', 'a') || isDirty;
-  isDirty = putDefaultSetting('button_functionality', 'basic') || isDirty;
-  isDirty = putDefaultSetting('magnifier', false) || isDirty;
-  isDirty = putDefaultSetting('last_auto_status', false) || isDirty;
+  isDirty = updateSettingIfMissing('keyboard_shortcut', 'a') || isDirty;
+  isDirty = updateSettingIfMissing('button_functionality', 'basic') || isDirty;
+  isDirty = updateSettingIfMissing('magnifier', false) || isDirty;
+  isDirty = updateSettingIfMissing('last_auto_status', false) || isDirty;
   if (isDirty) {
-    saveSettings();
+    saveSettingsToStorage();
   }
 }
 function updateSetting(name, value) {
   log('updateSetting', name, value);
   window.USER_SETTINGS[name] = value;
-  saveSettings();
+  saveSettingsToStorage();
 }
-function saveSettings() {
-  log('saveSettings');
-  dumpSettings('saved');
-  chrome.storage.local.set(window.USER_SETTINGS);
-}
-function putDefaultSetting(name, value) {
-  log('putDefaultSetting', name, value);
-  if (!window.USER_SETTINGS[name]) {
+function updateSettingIfMissing(name, value) {
+  log('updateSettingIfMissing', name, value);
+  if (!window.USER_SETTINGS.hasOwnProperty(name)) {
     window.USER_SETTINGS[name] = value;
     return true;
   }
   return false;
 }
+
+function saveSettingsToStorage() {
+  log('saveSettingsToStorage');
+  dumpSettings('saved');
+  chrome.storage.local.set(window.USER_SETTINGS);
+}
+
 function dumpSettings(context) {
   log('dumpSettings');
-  console.log(window.USER_SETTINGS, context);
+  log(window.USER_SETTINGS, context);
 }

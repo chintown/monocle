@@ -10,17 +10,18 @@ function loadScript(script, callback) {
     el.addEventListener('load', callback, false);
     document.head.appendChild(el);
 }
-loadScript('common/user_settings.js', function () {
-    loadSettings(function () {
-        toggleAuto();
+loadScript('common/dev.js', function () {
+    loadScript('common/user_settings.js', function () {
+        loadSettings(function () {
+            updateAuto();
+        });
     });
 });
-
 // ---------------------------------------------------------------------
 
 // interface for content page
 chrome.runtime.onMessage.addListener(function(request, sender, callback) {
-    console.log(window.USER_SETTINGS);
+    log('chrome.runtime.onMessage. msg, sender. ', request.msg, sender);
     switch(request.msg) {
         case "snapshot":
             cbSnapshot(callback);
@@ -41,8 +42,9 @@ chrome.runtime.onMessage.addListener(function(request, sender, callback) {
 
 // app button
 chrome.browserAction.onClicked.addListener(function(tab) {
+    log('chrome.browserAction.onClicked. button_functionality. ', window.USER_SETTINGS['button_functionality']);
     if (window.USER_SETTINGS['button_functionality'] === 'advanced') {
-        toggleAuto();
+        toggleAutoSetting();
     } else {
         turnAutoDisabled();
         chrome.tabs.sendMessage(tab.id, {msg: 'basic'});
@@ -53,6 +55,7 @@ chrome.browserAction.onClicked.addListener(function(tab) {
 
 // keyboard shortcut
 chrome.commands.onCommand.addListener(function(command) {
+    log('chrome.browserAction.onClicked. command. ', command);
     switch(command) {
         case "basic-snapshot":
             chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
@@ -72,13 +75,15 @@ chrome.commands.onCommand.addListener(function(command) {
 
 // ---------------------------------------------------------------------
 // change status of app button
-function toggleAuto() {
+function toggleAutoSetting() {
+    log('toggleAutoSetting');
     window.USER_SETTINGS['last_auto_status'] =
         window.USER_SETTINGS['last_auto_status']
         ? false : true;
     updateAuto();
 }
 function updateAuto() {
+    log('updateAuto', window.USER_SETTINGS['last_auto_status']);
     if (window.USER_SETTINGS['last_auto_status']) {
         turnAutoOn();
         trackEvent({'name': 'option', 'detail': 'auto_status.on'});
@@ -88,16 +93,19 @@ function updateAuto() {
     }
 }
 function turnAutoOn() {
+    log('turnAutoOn');
     chrome.browserAction.setBadgeBackgroundColor({color:[255, 0, 0, 0]});
     chrome.browserAction.setBadgeText({text:"on"});
     updateSetting('last_auto_status', true);
 }
 function turnAutoOff() {
+    log('turnAutoOff');
     chrome.browserAction.setBadgeBackgroundColor({color:[190, 190, 190, 230]});
     chrome.browserAction.setBadgeText({text:"off"});
     updateSetting('last_auto_status', false);
 }
 function turnAutoDisabled() {
+    log('turnAutoDisabled');
     chrome.browserAction.setBadgeText({text:""});
 }
 
@@ -131,7 +139,7 @@ _gaq.push(['_trackPageview']);
  * for information on how to use the asynchronous tracking API.
  */
 function trackEvent(eventMeta) {
-    console.log(eventMeta);
+    log('trackEvent', eventMeta.name, eventMeta.detail);
     if (eventMeta.detail) {
         _gaq.push(['_trackEvent', eventMeta.name, eventMeta.detail, '']);
     } else {

@@ -94,7 +94,7 @@ _gaq.push(['_trackPageview']);
  * for information on how to use the asynchronous tracking API.
  */
 function trackEvent(eventMeta) {
-    log('trackEvent', eventMeta);
+    log('trackEvent', eventMeta.name, eventMeta.detail);
     if (eventMeta.detail) {
         _gaq.push(['_trackEvent', eventMeta.name, eventMeta.detail, '']);
     } else {
