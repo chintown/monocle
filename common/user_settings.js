@@ -29,12 +29,10 @@ function updateSetting(name, value) {
   log('updateSetting', name, value);
   window.USER_SETTINGS[name] = value;
   saveSettingsToStorage();
-
-  chrome.runtime.sendMessage({msg: "reload", detail: window.USER_SETTINGS});
 }
 function updateSettingIfMissing(name, value) {
-  log('updateSettingIfMissing', name, value);
   if (!window.USER_SETTINGS.hasOwnProperty(name)) {
+    log('updateSetting(new setting)', name, value);
     window.USER_SETTINGS[name] = value;
     return true;
   }

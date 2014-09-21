@@ -13,7 +13,7 @@ function loadScript(script, callback) {
 loadScript('common/dev.js', function () {
     loadScript('common/user_settings.js', function () {
         loadSettingsFromStorage(function () {
-            applyAutoSetting();
+            updateAutoMark();
         });
     });
 });
@@ -35,7 +35,9 @@ chrome.runtime.onMessage.addListener(function(request, sender, callback) {
             callback(autoEnabledAndOn);
             break;
         case "reload":
-            window.USER_SETTINGS = request.detail;
+            loadSettingsFromStorage(function () {
+                updateAutoMark();
+            });
             break;
         default:
             break;
@@ -46,14 +48,17 @@ chrome.runtime.onMessage.addListener(function(request, sender, callback) {
 // app button
 chrome.browserAction.onClicked.addListener(function(tab) {
     log('chrome.browserAction.onClicked. button_functionality. ', window.USER_SETTINGS['button_functionality']);
-    if (window.USER_SETTINGS['button_functionality'] === 'advanced') {
-        toggleAutoSetting();
-    } else {
-        turnAutoMarkHide();
-        chrome.tabs.sendMessage(tab.id, {msg: 'basic'});
-    }
+
     trackEvent({'name': 'input', 'detail': 'mouse'});
 
+    if (window.USER_SETTINGS['button_functionality'] === 'advanced') {
+        var isOn = toggleAutoSetting();
+        if (isOn) {
+            chrome.tabs.sendMessage(tab.id, {msg: 'basic-no-toggle'});
+        }
+    } else {
+        chrome.tabs.sendMessage(tab.id, {msg: 'basic'});
+    }
 });
 
 // keyboard shortcut
@@ -79,32 +84,36 @@ chrome.commands.onCommand.addListener(function(command) {
 // ---------------------------------------------------------------------
 // change status of app button
 function toggleAutoSetting() {
-    log('toggleAutoSetting');
+    log('toggleAutoSetting. from ', window.USER_SETTINGS['last_auto_status']);
     window.USER_SETTINGS['last_auto_status'] =
         !window.USER_SETTINGS['last_auto_status'];
-    applyAutoSetting();
+    updateSetting('last_auto_status', window.USER_SETTINGS['last_auto_status']);
+    updateAutoMark();
+
+    var trackValue = window.USER_SETTINGS['last_auto_status'] ? 'on' : 'off';
+    trackEvent({'name': 'option', 'detail': 'auto_status.'+trackValue});
+
+    return window.USER_SETTINGS['last_auto_status'];
 }
-function applyAutoSetting() {
-    log('applyAutoSetting', window.USER_SETTINGS['last_auto_status']);
-    if (window.USER_SETTINGS['last_auto_status']) {
+function updateAutoMark() {
+    log('updateAutoMark', window.USER_SETTINGS['button_functionality'], window.USER_SETTINGS['last_auto_status']);
+    if (window.USER_SETTINGS['button_functionality'] === 'basic') {
+        turnAutoMarkHide();
+    } else if (window.USER_SETTINGS['last_auto_status']) {
         turnAutoMarkOn();
-        trackEvent({'name': 'option', 'detail': 'auto_status.on'});
     } else {
         turnAutoMarkOff();
-        trackEvent({'name': 'option', 'detail': 'auto_status.off'});
     }
 }
 function turnAutoMarkOn() {
     log('turnAutoMarkOn');
     chrome.browserAction.setBadgeBackgroundColor({color:[255, 0, 0, 0]});
     chrome.browserAction.setBadgeText({text:"on"});
-    updateSetting('last_auto_status', true);
 }
 function turnAutoMarkOff() {
     log('turnAutoMarkOff');
     chrome.browserAction.setBadgeBackgroundColor({color:[190, 190, 190, 230]});
     chrome.browserAction.setBadgeText({text:"off"});
-    updateSetting('last_auto_status', false);
 }
 function turnAutoMarkHide() {
     log('turnAutoMarkHide');

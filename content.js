@@ -334,6 +334,7 @@ function fixBound(input, min, max) {
     input = input < min ? min : input;
     input = input > max ? max : input;
     return input;
+
 }
 
 function getMouseYOnVisibleWindow(evt) {
@@ -378,6 +379,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 function eventDispatcher(action) {
     switch(action) {
         case "basic":
+        case "basic-no-toggle":
             window.SELECTED_SNAPSHOT_METHOD = jsSnapshot;
             break;
         case "refined":
@@ -386,11 +388,12 @@ function eventDispatcher(action) {
         default:
             break;
     }
+    var isNoToggle  = action === 'basic-no-toggle';
     var isChangingMethod = (window.SELECTED_SNAPSHOT_METHOD != window.PREVIOUS_METHOD);
     window.PREVIOUS_METHOD = window.SELECTED_SNAPSHOT_METHOD;
     var $viewport = $('#'+PREFIX+'viewport');
 
-    if (isChangingMethod) {
+    if (isChangingMethod || isNoToggle) {
         $viewport.remove();
         $viewport = [];
     }
