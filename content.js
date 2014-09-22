@@ -52,9 +52,25 @@ function setupSidebar() {
         width: '100%',
         backgroundColor: 'rgba(0%, 0%, 0%, 0.2)'
     });
+    var $magnifier = $('<div></div>').attr('id', PREFIX+'magnifier');
+    $magnifier.css({
+        position: 'absolute',
+        width: CONF_SIZE_MAGNIFIER,
+        height: CONF_SIZE_MAGNIFIER,
+        top: 10,
+        left: -1 * (CONF_SIZE_MAGNIFIER + 10),
+        overflow: 'hidden',
+
+        zIndex: 9999999999,
+        border: '3px solid darkgrey',
+        borderRadius: CONF_SIZE_MAGNIFIER,
+
+        display: 'none'
+    });
 
     $viewport.append($snapshot);
     $viewport.append($thumbnail);
+    $viewport.append($magnifier);
     $viewport.hide();
     $('body').append($viewport);
 }
