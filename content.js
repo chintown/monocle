@@ -105,17 +105,14 @@ function jsSnapshot() {
         useCORS: true,
         letterRendering: true,
         onrendered: function(canvas) {
-            var ctx = canvas.getContext('2d');
-            ctx.scale(SCALE_RATIO, SCALE_RATIO);
 
-            // http://stackoverflow.com/questions/8517879/how-to-rotate-the-existing-content-of-html5-canvas
-            var thumbCanvas = document.createElement("canvas"),
-                thumbCtx = thumbCanvas.getContext("2d");
-            thumbCanvas.width = SNAPSHOT_WIDTH;
-            thumbCanvas.height = SNAPSHOT_HEIGHT;
-            thumbCtx.drawImage(canvas, 0, 0, SNAPSHOT_WIDTH, SNAPSHOT_HEIGHT);
-            //exportImage(canvas);
-            $('#'+PREFIX+'snapshot').empty().append(thumbCanvas);
+            // _MAGNIFIER_
+            var magnifierCanvas = copyCanvas(canvas, CONTENT_WIDTH, CONTENT_HEIGHT);
+            $('#'+PREFIX+'magnifier').empty().append(magnifierCanvas);
+
+            var snapshotCanvas = copyCanvas(canvas, SNAPSHOT_WIDTH, SNAPSHOT_HEIGHT);
+            $('#'+PREFIX+'snapshot').empty().append(snapshotCanvas);
+
             $('#'+PREFIX+'viewport').show();
 
             $(window).scrollTop(window.LAST_SCROLL_POSITION);
@@ -194,9 +191,17 @@ function resetCanvas() {
     thumbCanvas.width = SNAPSHOT_WIDTH;
     thumbCanvas.height = SNAPSHOT_HEIGHT;
     $('#'+PREFIX+'snapshot').empty().append(thumbCanvas);
+
+    // _MAGNIFIER_
+    var magnifierCanvas = document.createElement("canvas");
+    magnifierCanvas.setAttribute("id", "canvas-magnifier");
+    magnifierCanvas.width = MAGNIFIER_WIDTH;
+    magnifierCanvas.height = MAGNIFIER_HEIGHT;
+    $('#'+PREFIX+'magnifier').empty().append(magnifierCanvas);
 }
 function nativePartialSnapshot(screenOffsetY, callback) {
     var snapshotOffsetY = SNAPSHOT_HEIGHT * screenOffsetY / CONTENT_HEIGHT;
+    var magnifierOffsetY = MAGNIFIER_HEIGHT * screenOffsetY / CONTENT_HEIGHT; // _MAGNIFIER_
     if (DEBUG) {
         console.table({
             field: ['position'],
@@ -215,6 +220,10 @@ function nativePartialSnapshot(screenOffsetY, callback) {
 
         var ctx = $('#canvas-native').get(0).getContext("2d");
         ctx.drawImage(img, 0, snapshotOffsetY, THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT);
+
+        // _MAGNIFIER_
+        var ctx2 = $('#canvas-magnifier').get(0).getContext("2d");
+        ctx2.drawImage(img, 0, magnifierOffsetY, VIEWPORT_WIDTH, VIEWPORT_HEIGHT);
 
         callback();
     });
@@ -254,6 +263,10 @@ function refreshGlobalMetric() {
                             ? VIEWPORT_HEIGHT - THUMBNAIL_HEIGHT
                             : SNAPSHOT_HEIGHT - THUMBNAIL_HEIGHT;
     SCALE_RATIO = 1.0 * THUMBNAIL_WIDTH / VIEWPORT_WIDTH;
+
+    // _MAGNIFIER_
+    MAGNIFIER_WIDTH = CONTENT_HEIGHT;
+    MAGNIFIER_HEIGHT = CONTENT_HEIGHT;
 
     if (DEBUG) {
         console.table({
@@ -367,6 +380,24 @@ function bindJumpEvent() {
     });
 }
 
+function bindHoverEvent() {
+    $('#'+PREFIX+'snapshot').mousemove(function (evt) {
+        var offsetY = getProjectedOffset(evt.offsetY, SNAPSHOT_HEIGHT, CONTENT_HEIGHT, 1.0 * CONF_SIZE_MAGNIFIER / CONTENT_HEIGHT);
+        var offsetX = getProjectedOffset(evt.offsetX, SNAPSHOT_WIDTH, CONTENT_WIDTH, 1.0 * CONF_SIZE_MAGNIFIER / CONTENT_WIDTH);
+        $('#'+PREFIX+'magnifier canvas').css({
+            'top': -1 * offsetY,
+            'left': -1 * offsetX,
+            'position': 'absolute'
+        });
+    });
+    $('#'+PREFIX+'snapshot').mouseover(function (evt) {
+        $('#'+PREFIX+'magnifier').show();
+    });
+    $('#'+PREFIX+'snapshot').mouseout(function (evt) {
+        $('#'+PREFIX+'magnifier').hide();
+    });
+}
+
 function fixBound(input, min, max) {
     input = input < min ? min : input;
     input = input > max ? max : input;
@@ -406,6 +437,7 @@ function initialize() {
     bindResizeEvent();
     bindDragEvent();
     bindJumpEvent();
+    bindHoverEvent(); // _MAGNIFIER_
 }
 
 window.PREVIOUS_METHOD = window.SELECTED_SNAPSHOT_METHOD = null;
