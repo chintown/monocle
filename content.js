@@ -99,6 +99,18 @@ function copyCanvas(fromCanvas, toWidth, toHeight) {
     //exportImage(fromCanvas);
     return newCanvas;
 }
+function buildByCanvas(fromCanvas) {
+    // _MAGNIFIER_
+    var magnifierCanvas = copyCanvas(fromCanvas, CONTENT_WIDTH, CONTENT_HEIGHT);
+    $('#'+PREFIX+'magnifier').empty().append(magnifierCanvas);
+
+    var snapshotCanvas = copyCanvas(fromCanvas, SNAPSHOT_WIDTH, SNAPSHOT_HEIGHT);
+    $('#'+PREFIX+'snapshot').empty().append(snapshotCanvas);
+
+    $('#'+PREFIX+'viewport').show();
+
+    delete fromCanvas;
+}
 function jsSnapshot() {
     // http://html2canvas.hertzen.com/documentation.html
     html2canvas(document.body, {
@@ -106,16 +118,7 @@ function jsSnapshot() {
         useCORS: true,
         letterRendering: true,
         onrendered: function(canvas) {
-
-            // _MAGNIFIER_
-            var magnifierCanvas = copyCanvas(canvas, CONTENT_WIDTH, CONTENT_HEIGHT);
-            $('#'+PREFIX+'magnifier').empty().append(magnifierCanvas);
-
-            var snapshotCanvas = copyCanvas(canvas, SNAPSHOT_WIDTH, SNAPSHOT_HEIGHT);
-            $('#'+PREFIX+'snapshot').empty().append(snapshotCanvas);
-
-            $('#'+PREFIX+'viewport').show();
-
+            buildByCanvas(canvas);
             $(window).scrollTop(window.LAST_SCROLL_POSITION);
         },
         width: CONTENT_WIDTH, //SNAPSHOT_WIDTH,
