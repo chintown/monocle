@@ -1,6 +1,9 @@
 var DEBUG = false;
 var PREFIX = 'monocle-';
 
+var CONF_SIZE_SNAPSHOT = 100;
+var CONF_SIZE_MAGNIFIER = 300;
+
     function uploadImage(img) {
         var xhr = new XMLHttpRequest(), formData = new FormData();
         formData.append("user_uploaded", img);
@@ -215,7 +218,7 @@ function refreshGlobalMetric() {
     // visible content
     CONTENT_WIDTH = $('html').width(); //visible width //document.body.scrollWidth;
     CONTENT_HEIGHT = document.body.scrollHeight; // whole height // $('html').height();
-    SNAPSHOT_WIDTH = THUMBNAIL_WIDTH = 100;
+    SNAPSHOT_WIDTH = THUMBNAIL_WIDTH = CONF_SIZE_SNAPSHOT;
     SNAPSHOT_HEIGHT = SNAPSHOT_WIDTH * CONTENT_HEIGHT / CONTENT_WIDTH;
     SNAPSHOT_PLAYGROUND = (SNAPSHOT_HEIGHT > VIEWPORT_HEIGHT)
                             ? SNAPSHOT_HEIGHT - VIEWPORT_HEIGHT
