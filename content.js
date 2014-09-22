@@ -92,6 +92,7 @@ function copyCanvas(fromCanvas, toWidth, toHeight) {
     // http://stackoverflow.com/questions/8517879/how-to-rotate-the-existing-content-of-html5-canvas
     var newCanvas = document.createElement("canvas"),
         newbCtx = newCanvas.getContext("2d");
+    // newbCtx.scale(SCALE_RATIO, SCALE_RATIO);
     newCanvas.width = toWidth;
     newCanvas.height = toHeight;
     newbCtx.drawImage(fromCanvas, 0, 0, toWidth, toHeight);
@@ -373,10 +374,8 @@ function getProjectedOffset(fromOffset, fromRange, toRange, viewportRatio) {
 
 function bindJumpEvent() {
     $('#'+PREFIX+'snapshot').click(function (evt) {
-        var landing = getMouseYOnVisibleWindow(evt);
-        landing -= 0.5 * THUMBNAIL_HEIGHT;
-        var updatedY = fixBound(landing, 0, THUMBNAIL_PLAYGROUND);
-        scrollByThumbnail(updatedY);
+        var offsetY = getProjectedOffset(evt.offsetY, SNAPSHOT_HEIGHT, CONTENT_HEIGHT, 1.0 * THUMBNAIL_HEIGHT / SNAPSHOT_HEIGHT);
+        $(window).scrollTop(offsetY);
     });
 }
 
