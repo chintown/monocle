@@ -72,6 +72,16 @@ function setupSnapshot() {
     // serverSideSnapshot();
     // nativeSnapshot();
 }
+function copyCanvas(fromCanvas, toWidth, toHeight) {
+    // http://stackoverflow.com/questions/8517879/how-to-rotate-the-existing-content-of-html5-canvas
+    var newCanvas = document.createElement("canvas"),
+        newbCtx = newCanvas.getContext("2d");
+    newCanvas.width = toWidth;
+    newCanvas.height = toHeight;
+    newbCtx.drawImage(fromCanvas, 0, 0, toWidth, toHeight);
+    //exportImage(fromCanvas);
+    return newCanvas;
+}
 function jsSnapshot() {
     // http://html2canvas.hertzen.com/documentation.html
     html2canvas(document.body, {
@@ -322,6 +332,14 @@ function bindDragEvent() {
 function monocleTempMousedown(e){
     // disable text selection
     e.preventDefault();
+}
+
+function getProjectedOffset(fromOffset, fromRange, toRange, viewportRatio) {
+    var ratio = 1.0 * fromOffset / fromRange;
+    ratio -= 0.5 * viewportRatio;
+    ratio = fixBound(ratio, 0, 1 - viewportRatio);
+    var toOffset = ratio * toRange;
+    return toOffset;
 }
 
 function bindJumpEvent() {
