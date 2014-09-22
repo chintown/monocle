@@ -169,11 +169,15 @@ function beforeNativeSnapshoted() {
        return $(this).css('position') === 'fixed';
     });
     window.RECOVERED_LIST.addClass('monocle-hidden');
+    window.BODY_OVERFLOW_STYLE = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
 }
 function afterNativeSnapshoted() {
     $('#'+PREFIX+'viewport').show();
     window.RECOVERED_LIST.removeClass('monocle-hidden');
     $(window).scrollTop(window.LAST_SCROLL_POSITION_FOR_NATIVE_SNAPSHOT);
+
+    document.body.style.overflow = window.BODY_OVERFLOW_STYLE;
 }
 function onNativePartialSnapshoted() {
     var arrangements = window.SNAPSHOT_POSITIONS;
