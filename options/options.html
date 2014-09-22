@@ -1,7 +1,7 @@
 
 <html>
   <head>
-    <title>Scroll Preview Options</title>
+    <title>Scroll Preview</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <script type="text/javascript" src="../libs/jquery-2.0.3.min.js"></script>
     <script type="text/javascript" src="options.js"></script>
@@ -12,7 +12,7 @@
   <body>
     <div id="wrap">
       <div id="tabMenu">
-        <h1>Scroll Preview Options</h1>
+        <h1>Scroll Preview</h1>
         <ul class="menu">
           <li><a href="#basics">Basics</a></li>
           <li><a href="#experiments">Experiments</a></li>
@@ -45,7 +45,7 @@
             <div class="option-subsection">
               <label><input id="app_basic" type="radio" name="mode" value="basic" /> <b>Manually</b>. You decide when to use it.</label>
               <ul class="option-note">
-                <li>Clicking extension button (<img src="../icons/monocle-16.png">) will generate a preview of current page.</li>
+                <li>Clicking extension button (<img src="../icons/monocle-16.png">) will generate a preview for current page.</li>
                 <li>If the preview is generated, clicking extension button (<img src="../icons/monocle-16.png">) just toggle it's visibility.</li>
               </ul>
               <br>
@@ -59,14 +59,14 @@
           <div class="option-section">
             <h3>Preview Type</h3>
             <div class="option-subsection">
-              <label><b>Simple</b> — Fast. But it can not display <i>external images</i>.</label>
+              <b>Simple</b> — Fast. But it can not display <i>external images</i>.
               <ul class="option-note">
                 <li>It's default behavior.</li>
-                <li>It uses <code>html canvas</code>.</li>
+                <li>It uses <code>plain javascript</code>.</li>
                 <li>It's limited by <a href="http://en.wikipedia.org/wiki/Same-origin_policy">same-origin policy</a>.</li>
               </ul>
               <br>
-              <label><b>Refined</b> — Slow. But it reflects all the details.</label>
+              <b>Refined</b> — Slow. But it reflects all the details.
               <ul class="option-note">
                 <li>It's only available through keyboard shortcut.</li>
                 <li>It uses <code>Chrome Snapshot API</code></li>
@@ -78,10 +78,13 @@
           <div class="option-section">
             <h3>Keyboard Shortcuts</h3>
             <div class="option-subsection">
-              <label><b><code>Alt + A</code></b> — <b>Simple</b> preview</label>
+              <b>Simple</b> — <code>Alt + A</code>
               <br>
-              <label><b><code>Alt + Shift + A</code></b> — <b>Refined</b> preview</label>
+              <b>Refined</b> — <code>Alt + Shift + A</code>
               <br>
+              <ul class="option-note">
+                <li>No matter you choose <b>manual</b> or <b>automatic</b> mode, keyboard shortcuts are always available.</li>
+              </ul>
             </div>
           </div>
         </div>
@@ -95,7 +98,7 @@
               <div>
                 <label>
                   <input id="magnifier" type="checkbox" name="useMagnifier" />
-                  <span class="option-field">Shows a enlarged thumb while mouse hovers on the scroll bar.</span>
+                  <span class="option-field">Shows a zoomed view while mouse hovers on scroll preview.</span>
                 </label>
               </div>
             </div>
