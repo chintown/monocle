@@ -189,8 +189,13 @@ function onNativePartialSnapshoted() {
     var position = window.SNAPSHOT_POSITIONS.shift();
     var offsetY = position[1];
     $(window).scrollTop(offsetY);
-    window.setTimeout(function() {
-        nativePartialSnapshot(offsetY, onNativePartialSnapshoted);
+
+    // wait until scroll finished
+    var handle = window.setInterval(function() {
+        if ($(window).scrollTop() === offsetY) {
+            clearInterval(handle);
+            nativePartialSnapshot(offsetY, onNativePartialSnapshoted);
+        }
     }, 10);
 }
 function resetCanvas() {
