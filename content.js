@@ -4,6 +4,10 @@ var PREFIX = 'monocle-';
 var CONF_SIZE_SNAPSHOT = 100;
 var CONF_SIZE_MAGNIFIER = 300;
 
+function log() {
+    if (DEBUG) console.log(arguments);
+}
+
     function uploadImage(img) {
         var xhr = new XMLHttpRequest(), formData = new FormData();
         formData.append("user_uploaded", img);
@@ -137,7 +141,7 @@ function serverSideSnapshot() {
     }).done(function(data) {
         var urlParam = window.location.href.replace(/[^a-zA-Z0-9]/gi, '-').replace(/^https?-+/, '');
         var imgSrc = url + 'result.php?u=' + encodeURI(urlParam) + '.jpg';
-        if (DEBUG) { console.log(data);console.log(imgSrc); }
+        log(data);log(imgSrc);
         var img = new Image();
         img.width = CONTENT_WIDTH;
         img.height = CONTENT_HEIGHT;
