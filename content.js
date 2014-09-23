@@ -208,18 +208,15 @@ function onNativePartialSnapshoted() {
     }, 10);
 }
 function resetCanvas() {
-    var thumbCanvas = document.createElement("canvas");
-    thumbCanvas.setAttribute("id", "canvas-native");
-    thumbCanvas.width = SNAPSHOT_WIDTH;
-    thumbCanvas.height = SNAPSHOT_HEIGHT;
-    $('#'+PREFIX+'snapshot').empty().append(thumbCanvas);
+    $('#'+PREFIX+'snapshot').empty();
+    $('#'+PREFIX+'magnifier').empty();
 
-    // _MAGNIFIER_
-    var magnifierCanvas = document.createElement("canvas");
-    magnifierCanvas.setAttribute("id", "canvas-magnifier");
-    magnifierCanvas.width = MAGNIFIER_WIDTH;
-    magnifierCanvas.height = MAGNIFIER_HEIGHT;
-    $('#'+PREFIX+'magnifier').empty().append(magnifierCanvas);
+    TEMP_CANVAS = document.createElement("canvas"),
+    TEMP_CTX = TEMP_CANVAS.getContext("2d");
+    TEMP_CANVAS.width = CONTENT_WIDTH;
+    TEMP_CANVAS.height = CONTENT_HEIGHT;
+
+    PREV_DATAURL = '';
 }
 function nativePartialSnapshot(screenOffsetY, callback) {
     var snapshotOffsetY = SNAPSHOT_HEIGHT * screenOffsetY / CONTENT_HEIGHT;
