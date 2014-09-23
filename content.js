@@ -205,7 +205,7 @@ function onNativePartialSnapshoted() {
             clearInterval(handle);
             nativePartialSnapshot(offsetY, onNativePartialSnapshoted);
         }
-    }, 10);
+    }, 10); // delay helps broken snapshot
 }
 function resetCanvas() {
     $('#'+PREFIX+'snapshot').empty();
@@ -219,33 +219,33 @@ function resetCanvas() {
     PREV_DATAURL = '';
 }
 function nativePartialSnapshot(screenOffsetY, callback) {
-    var snapshotOffsetY = SNAPSHOT_HEIGHT * screenOffsetY / CONTENT_HEIGHT;
-    var magnifierOffsetY = MAGNIFIER_HEIGHT * screenOffsetY / CONTENT_HEIGHT; // _MAGNIFIER_
-    if (DEBUG) {
-        console.table({
-            field: ['position'],
-            content: [screenOffsetY],
-            snapshot: [snapshotOffsetY],
-        });
-        ////$('#'+PREFIX+'viewport').show();
+    var img = new Image();
+    img.width = VIEWPORT_WIDTH;
+    img.height = VIEWPORT_HEIGHT;
+    img.onload = function () {
+        // img.style.border = "1px solid red";img.style.display = "none";$('body').prepend(img); // DEV
+        TEMP_CTX.drawImage(img, 0, screenOffsetY, VIEWPORT_WIDTH, VIEWPORT_HEIGHT);
+        delete img;
+
+        callback(); // delay helps broken snapshot
     }
 
-    chrome.runtime.sendMessage({msg: "snapshot"}, function(dataUrl) {
-        console.assert(dataUrl !== null, 'empty snapshot');
-        var img = new Image();
-        img.width = VIEWPORT_WIDTH;
-        img.height = CONTENT_HEIGHT;
-        img.src = dataUrl;
+    var trySnapshot = function snapshot() {
+        chrome.runtime.sendMessage({msg: "snapshot"}, function(dataUrl) {
+            console.assert(dataUrl !== null, 'empty snapshot');
 
-        var ctx = $('#canvas-native').get(0).getContext("2d");
-        ctx.drawImage(img, 0, snapshotOffsetY, THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT);
-
-        // _MAGNIFIER_
-        var ctx2 = $('#canvas-magnifier').get(0).getContext("2d");
-        ctx2.drawImage(img, 0, magnifierOffsetY, VIEWPORT_WIDTH, VIEWPORT_HEIGHT);
-
-        callback();
-    });
+            var isSucceeded = PREV_DATAURL !== dataUrl;
+            log(screenOffsetY, 'isSucceeded', isSucceeded);
+            PREV_DATAURL = dataUrl;
+            if (isSucceeded) {
+                img.src = dataUrl;
+                delete dataUrl;
+            } else {
+                snapshot(); // duplication happened. try again
+            }
+        });
+    }
+    trySnapshot();
 }
 
 function getPartialSnapshotPositions() {
