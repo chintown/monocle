@@ -163,8 +163,11 @@ function nativeSnapshot() {
 }
 function beforeNativeSnapshoted() {
     resetCanvas();
-    window.LAST_SCROLL_POSITION_FOR_NATIVE_SNAPSHOT = $(window).scrollTop();
+
     window.SNAPSHOT_POSITIONS = getPartialSnapshotPositions();
+
+    // keep status
+    window.LAST_SCROLL_POSITION_FOR_NATIVE_SNAPSHOT = $(window).scrollTop();
     window.RECOVERED_LIST = $('*').filter(function(){
        return $(this).css('position') === 'fixed';
     });
@@ -173,10 +176,12 @@ function beforeNativeSnapshoted() {
     document.body.style.overflow = "hidden";
 }
 function afterNativeSnapshoted() {
-    $('#'+PREFIX+'viewport').show();
-    window.RECOVERED_LIST.removeClass('monocle-hidden');
-    $(window).scrollTop(window.LAST_SCROLL_POSITION_FOR_NATIVE_SNAPSHOT);
+    buildByCanvas(TEMP_CANVAS);
+    // $('img').show(); // DEV
 
+    // reset status
+    $(window).scrollTop(window.LAST_SCROLL_POSITION_FOR_NATIVE_SNAPSHOT);
+    window.RECOVERED_LIST.removeClass('monocle-hidden');
     document.body.style.overflow = window.BODY_OVERFLOW_STYLE;
 }
 function onNativePartialSnapshoted() {
