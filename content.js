@@ -92,6 +92,13 @@ function setupSnapshot() {
     // serverSideSnapshot();
     // nativeSnapshot();
 }
+function imageSmoothingEnabled(ctx, state) {
+    // http://stackoverflow.com/questions/22003687/disabling-imagesmoothingenabled-by-default-on-multiple-canvases
+    ctx.mozImageSmoothingEnabled = state;
+    ctx.oImageSmoothingEnabled = state;
+    ctx.webkitImageSmoothingEnabled = state;
+    ctx.imageSmoothingEnabled = state;
+}
 function copyCanvas(fromCanvas, toWidth, toHeight) {
     // http://stackoverflow.com/questions/8517879/how-to-rotate-the-existing-content-of-html5-canvas
     var newCanvas = document.createElement("canvas"),
@@ -103,12 +110,32 @@ function copyCanvas(fromCanvas, toWidth, toHeight) {
     //exportImage(fromCanvas);
     return newCanvas;
 }
+function resampleCanvas(fromCanvas) {
+    // http://stackoverflow.com/questions/19262141/resize-image-with-javascript-canvas-smoothly
+    // http://stackoverflow.com/questions/17861447/html5-canvas-drawimage-how-to-apply-antialiasing
+    var ratio = 0.3;
+    var canvas = document.createElement("canvas");
+        ctx = canvas.getContext("2d");
+    canvas.width = fromCanvas.width;
+    canvas.height = fromCanvas.height;
+
+    var oc = document.createElement('canvas'),
+        octx = oc.getContext('2d');
+    oc.width = fromCanvas.width * ratio;
+    oc.height = fromCanvas.height * ratio;
+
+    octx.drawImage(fromCanvas, 0, 0, oc.width, oc.height);
+    octx.drawImage(oc, 0, 0, oc.width * ratio, oc.height * ratio);
+    ctx.drawImage(oc, 0, 0, oc.width * ratio, oc.height * ratio,
+                      0, 0, canvas.width, canvas.height);
+    return canvas;
+}
 function buildByCanvas(fromCanvas) {
     // _MAGNIFIER_
     var magnifierCanvas = copyCanvas(fromCanvas, CONTENT_WIDTH, CONTENT_HEIGHT);
     $('#'+PREFIX+'magnifier').empty().append(magnifierCanvas);
 
-    var snapshotCanvas = copyCanvas(fromCanvas, SNAPSHOT_WIDTH, SNAPSHOT_HEIGHT);
+    var snapshotCanvas = copyCanvas(resampleCanvas(fromCanvas), SNAPSHOT_WIDTH, SNAPSHOT_HEIGHT);
     $('#'+PREFIX+'snapshot').empty().append(snapshotCanvas);
 
     $('#'+PREFIX+'viewport').show();
