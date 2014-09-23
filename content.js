@@ -246,13 +246,13 @@ function getPartialSnapshotPositions() {
     var arrangements = [],
         // pad the vertical scrolling to try to deal with
         // sticky headers, 250 is an arbitrary size
-        scrollPad = 200,
+        scrollPad = 0, // no need
         yDelta = VIEWPORT_HEIGHT - (VIEWPORT_HEIGHT > scrollPad ? scrollPad : 0),
         yPos = CONTENT_HEIGHT - VIEWPORT_HEIGHT
         ;
 
     while (yPos > -yDelta) {
-        arrangements.push([0, yPos < 0 ? 0 : yPos]);
+        arrangements.push([0, yPos < 0 ? 0 : yPos]); // x, y
         yPos -= yDelta;
     }
     if (DEBUG) {console.table(arrangements);}
