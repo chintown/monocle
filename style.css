@@ -2,5 +2,7 @@
     display: none !important;
 }
 #monocle-snapshot {
-    box-shadow: -5px 5px 60px #808080;
+    /*box-shadow: -5px 5px 30px #FBFBFB;*/
+    border-left: 3px solid darkgrey;
+    border-bottom: 3px solid darkgrey;
 }
