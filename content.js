@@ -197,7 +197,7 @@ function onNativePartialSnapshoted() {
 
     // wait until scroll finished
     var handle = window.setInterval(function() {
-        if ($(window).scrollTop() === offsetY) {
+        if (Math.abs($(window).scrollTop() - offsetY) <= 2) {
             clearInterval(handle);
             nativePartialSnapshot(offsetY, onNativePartialSnapshoted);
         }
