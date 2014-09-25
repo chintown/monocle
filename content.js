@@ -133,7 +133,7 @@ function resampleCanvas(fromCanvas) {
 function buildByCanvas(fromCanvas) {
     if (window.USER_SETTINGS['magnifier']) {
         var magnifierCanvas = copyCanvas(fromCanvas, CONTENT_WIDTH, CONTENT_HEIGHT);
-        $('#'+PREFIX+'magnifier').empty().append(magnifierCanvas).show();
+        $('#'+PREFIX+'magnifier').empty().append(magnifierCanvas)
     }
 
     var snapshotCanvas = copyCanvas(resampleCanvas(fromCanvas), SNAPSHOT_WIDTH, SNAPSHOT_HEIGHT);
@@ -237,7 +237,7 @@ function onNativePartialSnapshoted() {
 }
 function resetCanvas() {
     $('#'+PREFIX+'snapshot').empty();
-    $('#'+PREFIX+'magnifier').empty().hide();
+    $('#'+PREFIX+'magnifier').empty()
 
     TEMP_CANVAS = document.createElement("canvas"),
     TEMP_CTX = TEMP_CANVAS.getContext("2d");
