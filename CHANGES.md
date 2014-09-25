@@ -1,6 +1,10 @@
 # Changelog
 
-## Version 2.0 (Current)
+## Version 2.1 (Current)
+
+* Add user options: magnifier and preview width.
+
+## Version 2.0
 
 * Add an option page.
 * Add an alway-on mode. (Suggested by [Dan Sayers](https://plus.google.com/108024724934415857156) and [Alexander Sergéev](https://github.com/sergeevabc)).
