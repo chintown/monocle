@@ -39,6 +39,9 @@ chrome.runtime.onMessage.addListener(function(request, sender, callback) {
                 updateAutoMark();
             });
             break;
+        case "config":
+            callback(window.USER_SETTINGS);
+            break;
         default:
             break;
     }

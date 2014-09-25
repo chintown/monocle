@@ -131,9 +131,10 @@ function resampleCanvas(fromCanvas) {
     return canvas;
 }
 function buildByCanvas(fromCanvas) {
-    // _MAGNIFIER_
-    var magnifierCanvas = copyCanvas(fromCanvas, CONTENT_WIDTH, CONTENT_HEIGHT);
-    $('#'+PREFIX+'magnifier').empty().append(magnifierCanvas);
+    if (window.USER_SETTINGS['magnifier']) {
+        var magnifierCanvas = copyCanvas(fromCanvas, CONTENT_WIDTH, CONTENT_HEIGHT);
+        $('#'+PREFIX+'magnifier').empty().append(magnifierCanvas).show();
+    }
 
     var snapshotCanvas = copyCanvas(resampleCanvas(fromCanvas), SNAPSHOT_WIDTH, SNAPSHOT_HEIGHT);
     $('#'+PREFIX+'snapshot').empty().append(snapshotCanvas);
@@ -236,7 +237,7 @@ function onNativePartialSnapshoted() {
 }
 function resetCanvas() {
     $('#'+PREFIX+'snapshot').empty();
-    $('#'+PREFIX+'magnifier').empty();
+    $('#'+PREFIX+'magnifier').empty().hide();
 
     TEMP_CANVAS = document.createElement("canvas"),
     TEMP_CTX = TEMP_CANVAS.getContext("2d");
@@ -426,19 +427,25 @@ function bindJumpEvent() {
 
 function bindHoverEvent() {
     $('#'+PREFIX+'snapshot').mousemove(function (evt) {
-        var offsetY = getProjectedOffset(evt.offsetY, SNAPSHOT_HEIGHT, CONTENT_HEIGHT, 1.0 * CONF_SIZE_MAGNIFIER / CONTENT_HEIGHT);
-        var offsetX = getProjectedOffset(evt.offsetX, SNAPSHOT_WIDTH, CONTENT_WIDTH, 1.0 * CONF_SIZE_MAGNIFIER / CONTENT_WIDTH);
-        $('#'+PREFIX+'magnifier canvas').css({
-            'top': -1 * offsetY,
-            'left': -1 * offsetX,
-            'position': 'absolute'
-        });
+        if (window.USER_SETTINGS['magnifier']) {
+            var offsetY = getProjectedOffset(evt.offsetY, SNAPSHOT_HEIGHT, CONTENT_HEIGHT, 1.0 * CONF_SIZE_MAGNIFIER / CONTENT_HEIGHT);
+            var offsetX = getProjectedOffset(evt.offsetX, SNAPSHOT_WIDTH, CONTENT_WIDTH, 1.0 * CONF_SIZE_MAGNIFIER / CONTENT_WIDTH);
+            $('#'+PREFIX+'magnifier canvas').css({
+                'top': -1 * offsetY,
+                'left': -1 * offsetX,
+                'position': 'absolute'
+            });
+        }
     });
     $('#'+PREFIX+'snapshot').mouseover(function (evt) {
-        $('#'+PREFIX+'magnifier').show();
+        if (window.USER_SETTINGS['magnifier']) {
+            $('#'+PREFIX+'magnifier').show();
+        }
     });
     $('#'+PREFIX+'snapshot').mouseout(function (evt) {
-        $('#'+PREFIX+'magnifier').hide();
+        if (window.USER_SETTINGS['magnifier']) {
+            $('#'+PREFIX+'magnifier').hide();
+        }
     });
 }
 
@@ -489,36 +496,48 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     eventDispatcher(request.msg);
 });
 
+function shiftViewport() {
+    var $html = $('html')
+        ,clazz = PREFIX+'enabled';
+    if (!$html.hasClass(clazz)) {
+        $html.addClass(clazz);
+    }
+}
+
 function eventDispatcher(action) {
-    switch(action) {
-        case "basic":
-        case "basic-no-toggle":
-            window.SELECTED_SNAPSHOT_METHOD = jsSnapshot;
-            break;
-        case "refined":
-            window.SELECTED_SNAPSHOT_METHOD = nativeSnapshot;
-            break;
-        default:
-            break;
-    }
-    var isNoToggle  = action === 'basic-no-toggle';
-    var isChangingMethod = (window.SELECTED_SNAPSHOT_METHOD != window.PREVIOUS_METHOD);
-    window.PREVIOUS_METHOD = window.SELECTED_SNAPSHOT_METHOD;
-    var $viewport = $('#'+PREFIX+'viewport');
+    chrome.runtime.sendMessage({msg: "config"}, function(userSettings) {
+        window.USER_SETTINGS = userSettings;
 
-    if (isChangingMethod || isNoToggle) {
-        $viewport.remove();
-        $viewport = [];
-    }
+        switch(action) {
+            case "basic":
+            case "basic-no-toggle":
+                window.SELECTED_SNAPSHOT_METHOD = jsSnapshot;
+                break;
+            case "refined":
+                window.SELECTED_SNAPSHOT_METHOD = nativeSnapshot;
+                break;
+            default:
+                break;
+        }
+        var isNoToggle  = action === 'basic-no-toggle';
+        var isChangingMethod = (window.SELECTED_SNAPSHOT_METHOD != window.PREVIOUS_METHOD);
+        window.PREVIOUS_METHOD = window.SELECTED_SNAPSHOT_METHOD;
+        var $viewport = $('#'+PREFIX+'viewport');
 
-    if ($viewport.length === 0) {
-        initialize();
-        chrome.runtime.sendMessage({msg: "track", name: "functionality", detail: action}, function() {});
-    } else if ($viewport.is(":visible")) {
-        $viewport.hide();
-        chrome.runtime.sendMessage({msg: "track", name: "functionality", detail: "hide"}, function() {});
-    } else {
-        $viewport.show();
-        chrome.runtime.sendMessage({msg: "track", name: "functionality", detail: "show"}, function() {});
-    }
+        if (isChangingMethod || isNoToggle) {
+            $viewport.remove();
+            $viewport = [];
+        }
+
+        if ($viewport.length === 0) {
+            initialize();
+            chrome.runtime.sendMessage({msg: "track", name: "functionality", detail: action}, function() {});
+        } else if ($viewport.is(":visible")) {
+            $viewport.hide();
+            chrome.runtime.sendMessage({msg: "track", name: "functionality", detail: "hide"}, function() {});
+        } else {
+            $viewport.show();
+            chrome.runtime.sendMessage({msg: "track", name: "functionality", detail: "show"}, function() {});
+        }
+    });
 }

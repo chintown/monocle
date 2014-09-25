@@ -39,9 +39,9 @@ function updateUiWithSettings() {
   } else {
     document.getElementById('app_basic').checked = true;
   }
-  // if (s['magnifier']) {
-  //   document.getElementById('magnifier').checked = true;
-  // }
+  if (s['magnifier']) {
+     document.getElementById('magnifier').checked = true;
+  }
 }
 function bindUiWithSettings() {
   log('bindUiWithSettings');
@@ -62,11 +62,12 @@ function bindUiWithSettings() {
 
     trackEvent({'name': 'option', 'detail': 'button_functionality.basic'});
   });
-  // document.getElementById('magnifier').addEventListener('change', function (e) {
-  //   updateSetting('magnifier', e.target.checked);
+  document.getElementById('magnifier').addEventListener('change', function (e) {
+     updateSetting('magnifier', e.target.checked);
+     chrome.runtime.sendMessage({msg: "reload"});
 
-  //   trackEvent({'name': 'option', 'detail': 'magnifier.'+e.target.checked});
-  // });
+     trackEvent({'name': 'option', 'detail': 'magnifier.'+e.target.checked});
+  });
 }
 
 // ---------------------------------------------------------------------
