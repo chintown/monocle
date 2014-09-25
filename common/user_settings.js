@@ -4,7 +4,8 @@ function loadSettingsFromStorage(callback) {
     'keyboard_shortcut',
     'button_functionality',
     'magnifier',
-    'last_auto_status'
+    'last_auto_status',
+    'width_preview'
   ]
   chrome.storage.local.get(expectedNames, function(settings) {
     window.USER_SETTINGS = settings || {};
@@ -21,6 +22,7 @@ function completeSettings() {
   isDirty = updateSettingIfMissing('button_functionality', 'basic') || isDirty;
   isDirty = updateSettingIfMissing('magnifier', false) || isDirty;
   isDirty = updateSettingIfMissing('last_auto_status', true) || isDirty;
+  isDirty = updateSettingIfMissing('width_preview', 100) || isDirty;
   if (isDirty) {
     saveSettingsToStorage();
   }

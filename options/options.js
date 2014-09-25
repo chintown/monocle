@@ -42,6 +42,9 @@ function updateUiWithSettings() {
   if (s['magnifier']) {
      document.getElementById('magnifier').checked = true;
   }
+  if (s['width_preview']) {
+    document.getElementById('width_preview').value = parseFloat(s['width_preview']);
+  }
 }
 function bindUiWithSettings() {
   log('bindUiWithSettings');
@@ -68,6 +71,20 @@ function bindUiWithSettings() {
 
      trackEvent({'name': 'option', 'detail': 'magnifier.'+e.target.checked});
   });
+  var getWidthOfPreview = function (e) {
+     var width = e.target.value;
+     width = parseFloat(width);
+     width = isNaN(width) ? 100 : width;
+     width = width < 100 ? 100 : width;
+
+     updateSetting('width_preview', width);
+     chrome.runtime.sendMessage({msg: "reload"});
+
+     trackEvent({'name': 'option', 'detail': 'width_preview.'+width});
+  };
+  document.getElementById('width_preview').addEventListener('keyup', getWidthOfPreview);
+  document.getElementById('width_preview').addEventListener('blur', getWidthOfPreview);
+  document.getElementById('width_preview').addEventListener('change', getWidthOfPreview);
 }
 
 // ---------------------------------------------------------------------
