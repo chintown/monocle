@@ -20,7 +20,7 @@ function completeSettings() {
   isDirty = updateSettingIfMissing('keyboard_shortcut', 'a') || isDirty;
   isDirty = updateSettingIfMissing('button_functionality', 'basic') || isDirty;
   isDirty = updateSettingIfMissing('magnifier', false) || isDirty;
-  isDirty = updateSettingIfMissing('last_auto_status', false) || isDirty;
+  isDirty = updateSettingIfMissing('last_auto_status', true) || isDirty;
   if (isDirty) {
     saveSettingsToStorage();
   }
