@@ -1,7 +1,6 @@
 var DEBUG = false;
 var PREFIX = 'monocle-';
 
-var CONF_SIZE_SNAPSHOT = 100;
 var CONF_SIZE_MAGNIFIER = 300;
 
 function log() {
@@ -110,10 +109,13 @@ function copyCanvas(fromCanvas, toWidth, toHeight) {
     //exportImage(fromCanvas);
     return newCanvas;
 }
-function resampleCanvas(fromCanvas) {
+function resampleCanvas(fromCanvas, widthOfTarget) {
     // http://stackoverflow.com/questions/19262141/resize-image-with-javascript-canvas-smoothly
     // http://stackoverflow.com/questions/17861447/html5-canvas-drawimage-how-to-apply-antialiasing
-    var ratio = 0.3;
+    var ratio = 0.5, ratioMin = 0.3, thresholdMax = 500, thresholdMin = 100, ratioDiff = ratio - ratioMin;
+    if (widthOfTarget < thresholdMax) {
+        ratio = ((thresholdMax * ratioMin - (thresholdMin * ratioDiff)) + ratioDiff * widthOfTarget) / (thresholdMax - thresholdMin);
+    }
     var canvas = document.createElement("canvas");
         ctx = canvas.getContext("2d");
     canvas.width = fromCanvas.width;
@@ -136,7 +138,7 @@ function buildByCanvas(fromCanvas) {
         $('#'+PREFIX+'magnifier').empty().append(magnifierCanvas)
     }
 
-    var snapshotCanvas = copyCanvas(resampleCanvas(fromCanvas), SNAPSHOT_WIDTH, SNAPSHOT_HEIGHT);
+    var snapshotCanvas = copyCanvas(resampleCanvas(fromCanvas, SNAPSHOT_WIDTH), SNAPSHOT_WIDTH, SNAPSHOT_HEIGHT);
     $('#'+PREFIX+'snapshot').empty().append(snapshotCanvas);
 
     $('#'+PREFIX+'viewport').show();
@@ -300,7 +302,7 @@ function refreshGlobalMetric() {
     // visible content
     CONTENT_WIDTH = $('html').width(); //visible width //document.body.scrollWidth;
     CONTENT_HEIGHT = document.body.scrollHeight; // whole height // $('html').height();
-    SNAPSHOT_WIDTH = THUMBNAIL_WIDTH = CONF_SIZE_SNAPSHOT;
+    SNAPSHOT_WIDTH = THUMBNAIL_WIDTH = parseFloat(window.USER_SETTINGS['width_preview']);
     SNAPSHOT_HEIGHT = SNAPSHOT_WIDTH * CONTENT_HEIGHT / CONTENT_WIDTH;
     SNAPSHOT_PLAYGROUND = (SNAPSHOT_HEIGHT > VIEWPORT_HEIGHT)
                             ? SNAPSHOT_HEIGHT - VIEWPORT_HEIGHT
