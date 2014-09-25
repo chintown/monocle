@@ -62,7 +62,7 @@ function setupSidebar() {
         width: CONF_SIZE_MAGNIFIER,
         height: CONF_SIZE_MAGNIFIER,
         top: 10,
-        left: -1 * (CONF_SIZE_MAGNIFIER + 10),
+        left: -1 * (CONF_SIZE_MAGNIFIER + 15),
         overflow: 'hidden',
 
         zIndex: 9999999999,
