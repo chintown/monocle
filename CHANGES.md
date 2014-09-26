@@ -1,6 +1,6 @@
 # Changelog
 
-## Version 2.1 (Current)
+## Version 2.2 (Current)
 
 * Add user options: magnifier and preview width.
 
