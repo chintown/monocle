@@ -20,7 +20,7 @@ function completeSettings() {
   var isDirty = false;
   isDirty = updateSettingIfMissing('keyboard_shortcut', 'a') || isDirty;
   isDirty = updateSettingIfMissing('button_functionality', 'basic') || isDirty;
-  isDirty = updateSettingIfMissing('magnifier', false) || isDirty;
+  isDirty = updateSettingIfMissing('magnifier', true) || isDirty;
   isDirty = updateSettingIfMissing('last_auto_status', true) || isDirty;
   isDirty = updateSettingIfMissing('width_preview', 100) || isDirty;
   if (isDirty) {
