@@ -1,6 +1,10 @@
 # Changelog
 
-## Version 2.2 (Current)
+## Version 2.3 (Current)
+
+* Fix extension permission to activate advanced snapshot.
+
+## Version 2.2
 
 * Add user options: magnifier and preview width.
 
