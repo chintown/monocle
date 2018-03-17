@@ -1,6 +1,10 @@
 # Changelog
 
-## Version 2.3 (Current)
+## Version 3.0 (Current)
+
+* Add auto-hide.
+
+## Version 2.3
 
 * Fix extension permission to activate advanced snapshot.
 
