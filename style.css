@@ -1,8 +1,39 @@
 .monocle-hidden {
     display: none !important;
 }
+#monocle-viewport {
+    position: fixed;
+    top: 0;
+    bottom: 0;;
+    right: 0;;
+    z-index: 9999999999;;
+    will-change: right;
+    transition: right 0.5s ease-in-out;
+}
 #monocle-snapshot {
+    position: absolute;
+    width: 100%;
     /*box-shadow: -5px 5px 30px #FBFBFB;*/
     border-left: 3px solid darkgrey;
     border-bottom: 3px solid darkgrey;
+}
+#monocle-thumbnail {
+    position: absolute;
+    width: 100%;
+    background-color: rgba(0%, 0%, 0%, 0.2);
+    cursor: ns-resize;
+}
+#monocle-magnifier {
+    position: absolute;
+    top: 10px;
+    overflow: hidden;
+    z-index: 9999999999;
+    border: 3px solid darkgrey;
+    display: none;
+}
+#line {
+    width: 100%;
+    height: 2px;
+    background-color: blue;
+    position: fixed;
 }

@@ -21,12 +21,6 @@ function log() {
     }
     function createLine() {
         var $line = $('<div id="line"></div>');
-        $line.css({
-            'width': '100%',
-            'height': '2px',
-            'backgroundColor': 'blue',
-            'position': 'fixed'
-        });
         $('body').append($line);
         return $line;
     }
@@ -39,48 +33,21 @@ function log() {
 
 function setupSidebar() {
     var $viewport = $('<div></div>').attr('id', PREFIX+'viewport');
-    $viewport.css({
-        position: 'fixed',
-        top: 0,
-        bottom: 0,
-        right: 0,
-        zIndex: 9999999999,
-        willChange: 'right',
-        transition: 'right 0.5s ease-in-out'
-    });
     var $snapshot = $('<div></div>').attr('id', PREFIX+'snapshot');
-    $snapshot.css({
-        position: 'absolute',
-        width: '100%'
-    });
     var $thumbnail = $('<div></div>').attr('id', PREFIX+'thumbnail');
-    $thumbnail.css({
-        position: 'absolute',
-        width: '100%',
-        backgroundColor: 'rgba(0%, 0%, 0%, 0.2)',
-        cursor: 'ns-resize'
-    });
     var $magnifier = $('<div></div>').attr('id', PREFIX+'magnifier');
     $magnifier.css({
-        position: 'absolute',
         width: CONF_SIZE_MAGNIFIER,
         height: CONF_SIZE_MAGNIFIER,
-        top: 10,
         left: -1 * (CONF_SIZE_MAGNIFIER + 15),
-        overflow: 'hidden',
-
-        zIndex: 9999999999,
-        border: '3px solid darkgrey',
-        borderRadius: CONF_SIZE_MAGNIFIER,
-
-        display: 'none'
+        borderRadius: CONF_SIZE_MAGNIFIER
     });
 
     $viewport.append($snapshot);
     $viewport.append($thumbnail);
     $viewport.append($magnifier);
-    $viewport.hide();
     $('body').append($viewport);
+    collapseViewport();
 }
 
 function cancelCollapseViewport() {
@@ -196,7 +163,7 @@ function buildByCanvas(fromCanvas) {
     var snapshotCanvas = copyCanvas(resampleCanvas(fromCanvas, SNAPSHOT_WIDTH), SNAPSHOT_WIDTH, SNAPSHOT_HEIGHT);
     $('#'+PREFIX+'snapshot').empty().append(snapshotCanvas);
 
-    $('#'+PREFIX+'viewport').show();
+    expandViewport();
 
     delete fromCanvas;
     
@@ -352,6 +319,10 @@ function getPartialSnapshotPositions() {
     return arrangements;
 }
 
+function loadGlobalMetric() {
+    SNAPSHOT_WIDTH = THUMBNAIL_WIDTH = parseFloat(window.USER_SETTINGS['width_preview']);
+}
+
 function refreshGlobalMetric() {
     SUPPRESS_CUSTOMIZED_SCROLL = false;
     VIEWPORT_WIDTH = $('html').width();//window.innerWidth;// || document.body.clientWidth;
@@ -359,7 +330,6 @@ function refreshGlobalMetric() {
     // visible content
     CONTENT_WIDTH = $('html').width(); //visible width //document.body.scrollWidth;
     CONTENT_HEIGHT = document.body.scrollHeight; // whole height // $('html').height();
-    SNAPSHOT_WIDTH = THUMBNAIL_WIDTH = parseFloat(window.USER_SETTINGS['width_preview']);
     SNAPSHOT_HEIGHT = SNAPSHOT_WIDTH * CONTENT_HEIGHT / CONTENT_WIDTH;
     SNAPSHOT_PLAYGROUND = (SNAPSHOT_HEIGHT > VIEWPORT_HEIGHT)
                             ? SNAPSHOT_HEIGHT - VIEWPORT_HEIGHT
@@ -559,6 +529,7 @@ $(document).ready(function () {
 });
 
 function initialize() {
+    loadGlobalMetric();
     setupSidebar();
     refreshGlobalMetric();
     setupSnapshot();
