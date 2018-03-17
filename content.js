@@ -2,6 +2,8 @@ var DEBUG = false;
 var PREFIX = 'monocle-';
 
 var CONF_SIZE_MAGNIFIER = 300;
+var CONF_WIDTH_COLLAPSED = 20;
+var CONF_DELAY_COLLAPSED = 5 * 1000;
 
 function log() {
     if (DEBUG) console.log(arguments);
@@ -42,7 +44,9 @@ function setupSidebar() {
         top: 0,
         bottom: 0,
         right: 0,
-        zIndex: 9999999999
+        zIndex: 9999999999,
+        willChange: 'right',
+        transition: 'right 0.5s ease-in-out'
     });
     var $snapshot = $('<div></div>').attr('id', PREFIX+'snapshot');
     $snapshot.css({
@@ -53,7 +57,8 @@ function setupSidebar() {
     $thumbnail.css({
         position: 'absolute',
         width: '100%',
-        backgroundColor: 'rgba(0%, 0%, 0%, 0.2)'
+        backgroundColor: 'rgba(0%, 0%, 0%, 0.2)',
+        cursor: 'ns-resize'
     });
     var $magnifier = $('<div></div>').attr('id', PREFIX+'magnifier');
     $magnifier.css({
@@ -76,6 +81,56 @@ function setupSidebar() {
     $viewport.append($magnifier);
     $viewport.hide();
     $('body').append($viewport);
+}
+
+function cancelCollapseViewport() {
+    log('cancelCollapseViewport')
+    clearTimeout(window[PREFIX + 'Timer']);
+}
+
+function collapseViewport() {
+    var $viewport = $('#' + PREFIX + 'viewport');
+    if ($viewport.hasClass(PREFIX + 'mouseover')) {
+        return;
+    }
+
+    cancelCollapseViewport();
+
+    log('collapseViewport');
+    $viewport.addClass(PREFIX + 'collapsed');
+    $viewport.css({ right: (-1 * (SNAPSHOT_WIDTH - CONF_WIDTH_COLLAPSED)) + 'px' })
+}
+
+function delayedCollapseViewport() {
+    var $viewport = $('#' + PREFIX + 'viewport');
+    if ($viewport.hasClass(PREFIX + 'mouseover')) {
+        return;
+    }
+
+    cancelCollapseViewport();
+
+    log('delayedCollapseViewport')    
+    // $viewport.addClass(PREFIX + 'collapsed');
+    window[PREFIX + 'Timer'] = setTimeout(function () {
+        if ($viewport.hasClass(PREFIX + 'mouseover')) {
+            return;
+        }
+        $viewport.addClass(PREFIX + 'collapsed');
+        $viewport.css({ right: (-1 * (SNAPSHOT_WIDTH - CONF_WIDTH_COLLAPSED)) + 'px' })
+    }, CONF_DELAY_COLLAPSED)
+}
+
+function expandViewport() {
+    var $viewport = $('#' + PREFIX + 'viewport');
+    if ($viewport.hasClass(PREFIX + 'mouseover')) {
+        return;
+    }
+
+    cancelCollapseViewport();
+
+    log('expandViewport');
+    $viewport.removeClass(PREFIX + 'collapsed');
+    $viewport.css({ right: 0 })
 }
 
 function setupJsSnapshot() {
@@ -144,6 +199,8 @@ function buildByCanvas(fromCanvas) {
     $('#'+PREFIX+'viewport').show();
 
     delete fromCanvas;
+    
+    delayedCollapseViewport()
 }
 function jsSnapshot() {
     // http://html2canvas.hertzen.com/documentation.html
@@ -337,7 +394,7 @@ function refreshGlobalMetric() {
         });
     }
 
-    $('html').css({marginRight: SNAPSHOT_WIDTH});
+    // $('html').css({marginRight: SNAPSHOT_WIDTH});
     $('#'+PREFIX+'viewport').width(SNAPSHOT_WIDTH);
     $('#'+PREFIX+'snapshot').height(SNAPSHOT_HEIGHT);
     $('#'+PREFIX+'thumbnail').height(THUMBNAIL_HEIGHT);
@@ -347,6 +404,9 @@ function refreshGlobalMetric() {
 
 function bindScrollEvent() {
     $(window).scroll(function(){
+        expandViewport();
+        delayedCollapseViewport();
+
         trackLastScrollPosition();
         scrollByWindow($(this).scrollTop());
     });
@@ -429,6 +489,8 @@ function bindJumpEvent() {
 }
 
 function bindHoverEvent() {
+    var $viewport = $('#' + PREFIX + 'viewport');
+
     $('#'+PREFIX+'snapshot').mousemove(function (evt) {
         if (window.USER_SETTINGS['magnifier']) {
             var offsetY = getProjectedOffset(evt.offsetY, SNAPSHOT_HEIGHT, CONTENT_HEIGHT, 1.0 * CONF_SIZE_MAGNIFIER / CONTENT_HEIGHT);
@@ -441,15 +503,28 @@ function bindHoverEvent() {
         }
     });
     $('#'+PREFIX+'snapshot').mouseover(function (evt) {
+        if ($viewport.hasClass(PREFIX + 'collapsed')) {
+            expandViewport();
+        }
+        $viewport.addClass(PREFIX + 'mouseover');
+
         if (window.USER_SETTINGS['magnifier']) {
             $('#'+PREFIX+'magnifier').show();
         }
     });
     $('#'+PREFIX+'snapshot').mouseout(function (evt) {
+        $viewport.removeClass(PREFIX + 'mouseover')
+        if (!$viewport.hasClass(PREFIX + 'collapsed')) {
+            delayedCollapseViewport();
+        }
+        
         if (window.USER_SETTINGS['magnifier']) {
             $('#'+PREFIX+'magnifier').hide();
         }
     });
+    $('#' + PREFIX + 'thumbnail').mouseover(function (evt) {
+        $viewport.addClass(PREFIX + 'mouseover');
+    })
 }
 
 function fixBound(input, min, max) {
@@ -535,13 +610,13 @@ function eventDispatcher(action) {
         if ($viewport.length === 0) {
             initialize();
             chrome.runtime.sendMessage({msg: "track", name: "functionality", detail: action}, function() {});
-        } else if ($viewport.is(":visible")) {
-            $viewport.hide();
-            $('html').css({ marginRight: 0 });
+        } else if (!$viewport.hasClass(PREFIX + 'collapsed')) {
+            collapseViewport();
+            // $('html').css({ marginRight: 0 });
             chrome.runtime.sendMessage({msg: "track", name: "functionality", detail: "hide"}, function() {});
         } else {
-            $viewport.show();
-            $('html').css({ marginRight: SNAPSHOT_WIDTH });
+            expandViewport()
+            // $('html').css({ marginRight: SNAPSHOT_WIDTH });
             chrome.runtime.sendMessage({msg: "track", name: "functionality", detail: "show"}, function() {});
         }
     });
