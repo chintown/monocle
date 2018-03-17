@@ -25,13 +25,13 @@
     },
     "commands": {
         "basic-snapshot": {
-            "description": "basic-snapshot",
+            "description": "Simple",
             "suggested_key": {
                 "default": "Alt+A"
             }
         },
         "refined-snapshot": {
-            "description": "refined-snapshot",
+            "description": "Refined",
             "suggested_key": {
                 "default": "Alt+Shift+A"
             }
