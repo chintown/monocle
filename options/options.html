@@ -86,7 +86,7 @@
               <ul class="option-note">
                 <li>No matter you choose <b>manual</b> or <b>automatic</b> mode, keyboard shortcuts are always available.</li>
               </ul>
-              <p>To change keyboard shortcuts, please go to Chrome Setting page.</p>
+              <div>To change keyboard shortcuts, please go to Chrome Setting page.</div>
               <ul class="option-note">
                 <li><code>Settings</code> > <code>More Tools</code> > <code>Extensions</code> > (open sidebar by clicking the icon at left-top corner) > <code>Keyboard shortcuts</code></li>
                 <li>Or visit <code>chrome://extensions/shortcuts</code></li>
@@ -99,6 +99,15 @@
                 <label><input id="width_preview" type="number" name="widthOfScroll" min="100" style="width: 50px"/> px (at least 100px)</label>
             </div>
           </div>
+          <div class="option-section">
+            <h3>Auto-hide</h3>
+            <div class="option-subsection">
+              <span>When it doesn't get active attentions (e.g mouse is on it or page is scrolling), let it hides with a delay in</span>
+              <label>
+                <input id="delay_sec_auto_hide" type="number" name="widthOfScroll" min="0" style="width: 50px" step="0.1"/> sec(s).</label>
+            </div>
+          </div>
+          <p><i>New changes are automatically saves. But for existing tabs, please refresh them to pick up the new changes.</i></p>
         </div>
 
 

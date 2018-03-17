@@ -45,6 +45,9 @@ function updateUiWithSettings() {
   if (s['width_preview']) {
     document.getElementById('width_preview').value = parseFloat(s['width_preview']);
   }
+  if (typeof s['delay_sec_auto_hide'] !== 'undefined') {
+    document.getElementById('delay_sec_auto_hide').value = parseFloat(s['delay_sec_auto_hide']);
+  }
 }
 function bindUiWithSettings() {
   log('bindUiWithSettings');
@@ -85,6 +88,20 @@ function bindUiWithSettings() {
   document.getElementById('width_preview').addEventListener('keyup', getWidthOfPreview);
   document.getElementById('width_preview').addEventListener('blur', getWidthOfPreview);
   document.getElementById('width_preview').addEventListener('change', getWidthOfPreview);
+
+  var getDelaySecAutoHide = function (e) {
+    var sec = e.target.value;
+    sec = parseFloat(sec);
+    sec = isNaN(sec) ? 3 : sec;
+
+    updateSetting('delay_sec_auto_hide', sec);
+    chrome.runtime.sendMessage({ msg: "reload" });
+
+    trackEvent({ 'name': 'option', 'detail': 'delay_sec_auto_hide.' + sec });
+  };
+  document.getElementById('delay_sec_auto_hide').addEventListener('keyup', getDelaySecAutoHide);
+  document.getElementById('delay_sec_auto_hide').addEventListener('blur', getDelaySecAutoHide);
+  document.getElementById('delay_sec_auto_hide').addEventListener('change', getDelaySecAutoHide);
 }
 
 // ---------------------------------------------------------------------

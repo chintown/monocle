@@ -3,7 +3,6 @@ var PREFIX = 'monocle-';
 
 var CONF_SIZE_MAGNIFIER = 300;
 var CONF_WIDTH_COLLAPSED = 20;
-var CONF_DELAY_COLLAPSED = 5 * 1000;
 
 function log() {
     if (DEBUG) console.log(arguments);
@@ -321,6 +320,7 @@ function getPartialSnapshotPositions() {
 
 function loadGlobalMetric() {
     SNAPSHOT_WIDTH = THUMBNAIL_WIDTH = parseFloat(window.USER_SETTINGS['width_preview']);
+    CONF_DELAY_COLLAPSED = parseFloat(window.USER_SETTINGS['delay_sec_auto_hide']) * 1000;
 }
 
 function refreshGlobalMetric() {

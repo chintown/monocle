@@ -5,7 +5,8 @@ function loadSettingsFromStorage(callback) {
     'button_functionality',
     'magnifier',
     'last_auto_status',
-    'width_preview'
+    'width_preview',
+    'delay_sec_auto_hide'
   ]
   chrome.storage.local.get(expectedNames, function(settings) {
     window.USER_SETTINGS = settings || {};
@@ -23,6 +24,7 @@ function completeSettings() {
   isDirty = updateSettingIfMissing('magnifier', true) || isDirty;
   isDirty = updateSettingIfMissing('last_auto_status', true) || isDirty;
   isDirty = updateSettingIfMissing('width_preview', 100) || isDirty;
+  isDirty = updateSettingIfMissing('delay_sec_auto_hide', 3) || isDirty;
   if (isDirty) {
     saveSettingsToStorage();
   }
