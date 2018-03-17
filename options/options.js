@@ -48,6 +48,14 @@ function updateUiWithSettings() {
   if (typeof s['delay_sec_auto_hide'] !== 'undefined') {
     document.getElementById('delay_sec_auto_hide').value = parseFloat(s['delay_sec_auto_hide']);
   }
+  if (typeof s['blacklist'] !== 'undefined' && s['blacklist'] !== '') {
+    console.log('loaded blacklist', s['blacklist'], "`" + s['blacklist'].join("\n") + "`")
+    document.getElementById('blacklist').innerText = s['blacklist'].join("\n");
+  }
+  if (typeof s['whitelist'] !== 'undefined' && s['whitelist'] !== '') {
+    console.log('loaded whitelist', s['whitelist'], "`" + s['whitelist'].join("\n") + "`")
+    document.getElementById('whitelist').innerText = s['whitelist'].join("\n");
+  }
 }
 function bindUiWithSettings() {
   log('bindUiWithSettings');
@@ -102,6 +110,37 @@ function bindUiWithSettings() {
   document.getElementById('delay_sec_auto_hide').addEventListener('keyup', getDelaySecAutoHide);
   document.getElementById('delay_sec_auto_hide').addEventListener('blur', getDelaySecAutoHide);
   document.getElementById('delay_sec_auto_hide').addEventListener('change', getDelaySecAutoHide);
+
+  var warnning = ' // invalid and ignored';
+  var getlist = function (e, identifier) {
+    var listUrlPtns = e.target.value;    
+    listUrlPtns = listUrlPtns.trim().split("\n");
+    listUrlPtns = listUrlPtns.filter(function (listUrlPtns) { return listUrlPtns.trim() !== '';})
+    // listUrlPtns = listUrlPtns.map(function(rawPtn) {
+    //   var ptn = rawPtn;
+    //   try {
+    //     ptn = ptn.replace(/http(s)?:\.\./, '');
+    //     ptn = ptn.replace(/\*/g, 'foo')
+    //     ptn = 'http://' + ptn
+    //     console.log(new URL(ptn));
+    //   } catch (e) {
+    //     rawPtn = rawPtn.replace(warnning, '') + warnning;
+    //   }
+    //   return rawPtn
+    // });
+
+    // console.log(listUrlPtns)
+    // document.getElementById(identifier).value = listUrlPtns.join("\n");
+
+    updateSetting(identifier, listUrlPtns);
+    chrome.runtime.sendMessage({ msg: "reload" });
+
+    trackEvent({ 'name': 'option', 'detail': identifier + '.' + listUrlPtns.length });
+  };
+  var getBlackList = function(e) { return getlist(e, 'blacklist') }
+  var getWhiteList = function(e) { return getlist(e, 'whitelist') }
+  document.getElementById('whitelist').addEventListener('blur', getWhiteList);
+  document.getElementById('blacklist').addEventListener('blur', getBlackList);
 }
 
 // ---------------------------------------------------------------------

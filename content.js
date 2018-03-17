@@ -75,7 +75,7 @@ function delayedCollapseViewport() {
 
     cancelCollapseViewport();
 
-    log('delayedCollapseViewport')    
+    log('delayedCollapseViewport')
     // $viewport.addClass(PREFIX + 'collapsed');
     window[PREFIX + 'Timer'] = setTimeout(function () {
         if ($viewport.hasClass(PREFIX + 'mouseover')) {
@@ -165,7 +165,7 @@ function buildByCanvas(fromCanvas) {
     expandViewport();
 
     delete fromCanvas;
-    
+
     delayedCollapseViewport()
 }
 function jsSnapshot() {
@@ -206,7 +206,7 @@ function serverSideSnapshot() {
             thumbCanvas.height = SNAPSHOT_HEIGHT;
             thumbCtx.drawImage(img, 0, 0, SNAPSHOT_WIDTH, SNAPSHOT_HEIGHT);
             $('#'+PREFIX+'snapshot').empty().append(thumbCanvas);
-            $('#'+PREFIX+'viewport').show();
+            expandViewport();
 
             $(window).scrollTop(window.LAST_SCROLL_POSITION);
         });
@@ -398,7 +398,7 @@ function bindResizeEvent() {
     });
 }
 function postHookResizing() {
-    $('#'+PREFIX+'viewport').hide();
+    // collapseViewport();
     refreshGlobalMetric();
     setupJsSnapshot();
     window.PREVIOUS_METHOD = jsSnapshot;
@@ -487,7 +487,7 @@ function bindHoverEvent() {
         if (!$viewport.hasClass(PREFIX + 'collapsed')) {
             delayedCollapseViewport();
         }
-        
+
         if (window.USER_SETTINGS['magnifier']) {
             $('#'+PREFIX+'magnifier').hide();
         }
@@ -518,8 +518,8 @@ function scrollByThumbnail(newTop) {
 }
 
 $(document).ready(function () {
-    chrome.runtime.sendMessage({msg: "land"}, function(isAutoEnabledAndOn) {
-        if (isAutoEnabledAndOn) {
+    chrome.runtime.sendMessage({ msg: "land", url: window.location.href }, function (shouldAutoLoad) {
+        if (shouldAutoLoad) {
             eventDispatcher('basic');
         }
     });

@@ -48,12 +48,17 @@
                 <li>Clicking extension button (<img src="../icons/monocle-16.png">) will generate a preview for current page.</li>
                 <li>If the preview is generated, clicking extension button (<img src="../icons/monocle-16.png">) just toggle it's visibility.</li>
               </ul>
+              <span>Always-on urls list (one entry per line)</span>
+              <textarea id="whitelist" cols="70" rows="3" placeholder="e.g. news.ycombinator.com/item?id=*"></textarea>
               <br>
               <label><input id="app_advanced" type="radio" name="mode" value="advanced" /> <b>Automatically</b>. It's convenient when you need to read a lot.</label>
               <ul class="option-note">
                 <li>Preview is automatically generated for every new page.</li>
                 <li>Clicking extension button (<img src="../icons/monocle-16.png">) can turn off the automation.</li>
+                <li class="warning">Generating preview is actually a heavy duty (it might even block your page). Use it wisely.</li>
               </ul>
+              <span>Always-off url list (one entry per line)</span>
+              <textarea id="blacklist" cols="70" rows="3" placeholder="e.g. *.google.com"></textarea>
             </div>
           </div>
           <div class="option-section">
@@ -61,7 +66,7 @@
             <div class="option-subsection">
               <b>Simple</b> — Fast. But it can not display <i>external images</i> and <i>iframes</i>.
               <ul class="option-note">
-                <li>It's default behavior.</li>
+                <li>It's the default behavior.</li>
                 <li>It uses <code>plain javascript</code>.</li>
                 <li>It's limited by <a href="http://en.wikipedia.org/wiki/Same-origin_policy">same-origin policy</a>.</li>
               </ul>

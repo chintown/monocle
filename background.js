@@ -17,6 +17,25 @@ loadScript('common/dev.js', function () {
         });
     });
 });
+
+// ---------------------------------------------------------------------
+// dispatching auto on
+function isInList(identifier, url) {
+    var result = {};
+    console.log('check whether', url, 'is in', identifier)
+    window.USER_SETTINGS[identifier].map(function (rawPtn) {
+        console.log('[coded pattern]', rawPtn)
+        var ptn = rawPtn.replace(/([.+?{}\/])/g, '\\$1').replace(/\*+/g, '.*');
+        console.log('[regex pattern]', ptn)
+        ptn = new RegExp(ptn, 'g')
+        var isMatched = !!url.match(ptn)
+        result[isMatched] = result[isMatched] ? result[isMatched].concat(rawPtn) : [rawPtn];
+    })
+    var isInList = result.true && result.true.length
+    console.log(result, isInList ? 'In ' + identifier : 'not in ' + identifier + ' ....');
+    return isInList;
+}
+
 // ---------------------------------------------------------------------
 
 // interface for content page
@@ -30,9 +49,13 @@ chrome.runtime.onMessage.addListener(function(request, sender, callback) {
             trackEvent(request);
             break;
         case "land":
-            var autoEnabledAndOn = window.USER_SETTINGS['last_auto_status']
-                && window.USER_SETTINGS['button_functionality'] === 'advanced';
-            callback(autoEnabledAndOn);
+            // var autoEnabledAndOn = window.USER_SETTINGS['last_auto_status']
+            //     && window.USER_SETTINGS['button_functionality'] === 'advanced';
+            // callback(autoEnabledAndOn);
+            var shouldAutoLoad = 
+                (window.USER_SETTINGS['button_functionality'] === 'basic' && isInList('whitelist', request.url))
+                || (window.USER_SETTINGS['button_functionality'] === 'advanced' && !isInList('blacklist', request.url))
+            callback(shouldAutoLoad);
             break;
         case "reload":
             loadSettingsFromStorage(function () {

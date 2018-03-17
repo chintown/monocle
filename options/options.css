@@ -213,3 +213,7 @@ ul.menu li.tabActive a {
 #shortcut {
   text-align: center;
 }
+
+.warning {
+  color: #f22323;
+}
