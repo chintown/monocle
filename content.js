@@ -337,6 +337,7 @@ function refreshGlobalMetric() {
         });
     }
 
+    $('html').css({marginRight: SNAPSHOT_WIDTH});
     $('#'+PREFIX+'viewport').width(SNAPSHOT_WIDTH);
     $('#'+PREFIX+'snapshot').height(SNAPSHOT_HEIGHT);
     $('#'+PREFIX+'thumbnail').height(THUMBNAIL_HEIGHT);
@@ -536,9 +537,11 @@ function eventDispatcher(action) {
             chrome.runtime.sendMessage({msg: "track", name: "functionality", detail: action}, function() {});
         } else if ($viewport.is(":visible")) {
             $viewport.hide();
+            $('html').css({ marginRight: 0 });
             chrome.runtime.sendMessage({msg: "track", name: "functionality", detail: "hide"}, function() {});
         } else {
             $viewport.show();
+            $('html').css({ marginRight: SNAPSHOT_WIDTH });
             chrome.runtime.sendMessage({msg: "track", name: "functionality", detail: "show"}, function() {});
         }
     });
