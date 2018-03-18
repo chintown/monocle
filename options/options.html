@@ -15,7 +15,7 @@
         <h1>Scroll Preview</h1>
         <ul class="menu">
           <li><a href="#basics">Basics</a></li>
-          <li><a href="#experiments">Experiments</a></li>
+          <li><a href="#advanced">Advanced</a></li>
         </ul>
         <div class='separator'></div>
         <div id="footer">
@@ -43,22 +43,18 @@
           <div class="option-section">
             <h3>How it works</h3>
             <div class="option-subsection">
-              <label><input id="app_basic" type="radio" name="mode" value="basic" /> <b>Manually</b>. You decide when to use it.</label>
+              <label><input id="app_basic" type="radio" name="mode" value="basic" /> <b>Manual</b>. You decide when to use it.</label>
               <ul class="option-note">
                 <li>Clicking extension button (<img src="../icons/monocle-16.png">) will generate a preview for current page.</li>
                 <li>If the preview is generated, clicking extension button (<img src="../icons/monocle-16.png">) just toggle it's visibility.</li>
               </ul>
-              <span>Always-on urls list (one entry per line)</span>
-              <textarea id="whitelist" cols="70" rows="3" placeholder="e.g. news.ycombinator.com/item?id=*"></textarea>
               <br>
-              <label><input id="app_advanced" type="radio" name="mode" value="advanced" /> <b>Automatically</b>. It's convenient when you need to read a lot.</label>
+              <label><input id="app_advanced" type="radio" name="mode" value="advanced" /> <b>Automatic</b>. It's convenient when you need to read a lot.</label>
               <ul class="option-note">
                 <li>Preview is automatically generated for every new page.</li>
                 <li>Clicking extension button (<img src="../icons/monocle-16.png">) can turn off the automation.</li>
                 <li class="warning">Generating preview is actually a heavy duty (it might even block your page). Use it wisely.</li>
               </ul>
-              <span>Always-off url list (one entry per line)</span>
-              <textarea id="blacklist" cols="70" rows="3" placeholder="e.g. *.google.com"></textarea>
             </div>
           </div>
           <div class="option-section">
@@ -93,31 +89,17 @@
               </ul>
               <div>To change keyboard shortcuts, please go to Chrome Setting page.</div>
               <ul class="option-note">
-                <li><code>Settings</code> > <code>More Tools</code> > <code>Extensions</code> > (open sidebar by clicking the icon at left-top corner) > <code>Keyboard shortcuts</code></li>
+                <li><code>Settings</code> > <code>More Tools</code> > <code>Extensions</code> > (open sidebar by clicking the icon at upper-left corner) > <code>Keyboard shortcuts</code></li>
                 <li>Or visit <code>chrome://extensions/shortcuts</code></li>
               </ul>
             </div>
           </div>
-          <div class="option-section">
-            <h3>Preview Width</h3>
-            <div class="option-subsection">
-                <label><input id="width_preview" type="number" name="widthOfScroll" min="100" style="width: 50px"/> px (at least 100px)</label>
-            </div>
-          </div>
-          <div class="option-section">
-            <h3>Auto-hide</h3>
-            <div class="option-subsection">
-              <span>When it doesn't get active attentions (e.g mouse is on it or page is scrolling), let it hides with a delay in</span>
-              <label>
-                <input id="delay_sec_auto_hide" type="number" name="widthOfScroll" min="0" style="width: 50px" step="0.1"/> sec(s).</label>
-            </div>
-          </div>
-          <p><i>New changes are automatically saves. But for existing tabs, please refresh them to pick up the new changes.</i></p>
+          <p><i>New changes are saved automatically. But to let existing tabs pick up the changes, please refresh.</i></p>
         </div>
 
 
-        <div id="experiments">
-          <h2>Experiments</h2>
+        <div id="advanced">
+          <h2>Advanced</h2>
           <div class="option-section">
             <h3>Magnifier</h3>
             <div class="option-subsection">
@@ -129,6 +111,38 @@
               </div>
             </div>
           </div>
+          <div class="option-section">
+            <h3>Preview Width</h3>
+            <div class="option-subsection">
+              <label>
+                <input id="width_preview" type="number" name="widthOfScroll" min="100" style="width: 50px" /> px (at least 100px)</label>
+            </div>
+          </div>
+          <div class="option-section">
+            <h3>Auto-hide</h3>
+            <div class="option-subsection">
+              <span>When it doesn't get active attentions (e.g mouse is on it or page is scrolling), let it hide with a delay in</span>
+              <label>
+                <input id="delay_sec_auto_hide" type="number" name="widthOfScroll" min="0" style="width: 50px" step="0.1" /> sec(s).</label>
+            </div>
+          </div>
+          <div class="option-section">
+            <h3>Whitlist</h3>
+            <div class="option-subsection">
+              <span>If URL matches any following patterns, <br>preview will be enabled automatically, even you're in <b>Manual</b> mode.</span>
+              <textarea id="whitelist" cols="70" rows="8" placeholder="e.g. news.ycombinator.com/item?id=*"></textarea>
+              <span>(one url pattern per line)</span>
+            </div>
+          </div>
+          <div class="option-section">
+            <h3>Blacklist</h3>
+            <div class="option-subsection">
+              <span>If URL matches any following patterns, <br>preview will be disabled, even you're in <b>Automatic</b> mode.</span>
+              <textarea id="blacklist" cols="70" rows="8" placeholder="e.g. *.google.com"></textarea>
+              <span>(one url pattern per line)</span>
+            </div>
+          </div>
+          <p><i>New changes are automatically saves. But for existing tabs, please refresh them to pick up the new changes.</i></p>
         </div>
       </div>
   </body>

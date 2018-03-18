@@ -217,3 +217,7 @@ ul.menu li.tabActive a {
 .warning {
   color: #f22323;
 }
+
+textarea {
+  margin-top: 18px;
+}

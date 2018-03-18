@@ -12,19 +12,27 @@ function init() {
   });
 }
 
+function resetTabs() {
+  $('ul.menu a').parent().removeClass('tabActive');
+  $('#options > div').hide();
+}
+
+function switchTab(hash) {
+  resetTabs()
+  hash = hash || '#basics';
+  $('.menu a[href="' + hash + '"').parent().addClass('tabActive');
+  $(hash).fadeIn();
+}
+
 function initializeTabs() {
   log('initializeTabs');
-  $('ul.menu li:first').addClass('tabActive').show();
-  $('#options > div').hide();
-  $('#basics').show();
+  var hash = window.location.hash;
+  switchTab(hash);
 
   $("ul.menu").on("click", "li", function() {
-    $('ul.menu li').removeClass('tabActive');
-    $(this).addClass('tabActive');
-    $('#options > div').hide();
-
-    // Fade in the correct DIV.
-    var activeTab = $($(this).find('a').attr('href')).fadeIn();
+    hash = $(this).find('a').attr('href');
+    window.location.hash = hash;
+    switchTab(hash);
     return false;
   });
 }
@@ -50,11 +58,11 @@ function updateUiWithSettings() {
   }
   if (typeof s['blacklist'] !== 'undefined' && s['blacklist'] !== '') {
     console.log('loaded blacklist', s['blacklist'], "`" + s['blacklist'].join("\n") + "`")
-    document.getElementById('blacklist').innerText = s['blacklist'].join("\n");
+    document.getElementById('blacklist').value = s['blacklist'].join("\n");
   }
   if (typeof s['whitelist'] !== 'undefined' && s['whitelist'] !== '') {
     console.log('loaded whitelist', s['whitelist'], "`" + s['whitelist'].join("\n") + "`")
-    document.getElementById('whitelist').innerText = s['whitelist'].join("\n");
+    document.getElementById('whitelist').value = s['whitelist'].join("\n");
   }
 }
 function bindUiWithSettings() {
