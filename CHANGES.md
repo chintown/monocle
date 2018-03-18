@@ -1,6 +1,10 @@
 # Changelog
 
-## Version 3.1 (Current)
+## Version 4.0
+
+* Add whitelist and blacklist.(Suggested by [Mahdy dar](https://plus.google.com/101853672433809194643).)
+
+## Version 3.1
 
 * Add an user option: auto-hide delay. (Suggested by [kegan](https://plus.google.com/102420660367036951976) and [Eduard Liring](https://plus.google.com/108084245049981806712)).)
 * Improve visual hint.
