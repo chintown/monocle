@@ -131,7 +131,12 @@
             <div class="option-subsection">
               <span>If URL matches any following patterns, <br>preview will be enabled automatically, even you're in <b>Manual</b> mode.</span>
               <textarea id="whitelist" cols="70" rows="8" placeholder="e.g. news.ycombinator.com/item?id=*"></textarea>
-              <span>(one url pattern per line)</span>
+              <span>One url pattern per line. For example, </span>
+              <code><pre>
+https://news.ycombinator.com/item?id=*
+www.stackoverflow.com/questions/*
+www.reddit.com/r/*/comments/
+              </pre></code>
             </div>
           </div>
           <div class="option-section">
@@ -139,7 +144,14 @@
             <div class="option-subsection">
               <span>If URL matches any following patterns, <br>preview will be disabled, even you're in <b>Automatic</b> mode.</span>
               <textarea id="blacklist" cols="70" rows="8" placeholder="e.g. *.google.com"></textarea>
-              <span>(one url pattern per line)</span>
+              <span>One url pattern per line. For example, </span>
+              <code><pre>
+*.google.com
+*.amazon.com
+www.facebook.com
+www.youtube.com
+codepen.io
+              </pre></code>
             </div>
           </div>
           <p><i>New changes are automatically saves. But for existing tabs, please refresh them to pick up the new changes.</i></p>

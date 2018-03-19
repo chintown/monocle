@@ -5,7 +5,14 @@ body {
   color: #555;
   margin: 0;
   padding: 0;
-  background-color: #fff;`
+  background-color: #fff;
+}
+
+span{
+  line-height: 1.5rem;
+}
+code {
+  line-height: 1rem;
 }
 
 #wrap {
