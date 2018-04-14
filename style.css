@@ -38,3 +38,8 @@
     background-color: blue;
     position: fixed;
 }
+
+#monocle-magnifier canvas {
+    max-width: initial;
+    /* reset from reset */
+}
