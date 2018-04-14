@@ -4,6 +4,8 @@ var PREFIX = 'monocle-';
 var CONF_SIZE_MAGNIFIER = 300;
 var CONF_WIDTH_COLLAPSED = 20;
 
+var BORDER_WIDTH_SNAPSHOT = 3;
+
 function log() {
     if (DEBUG) console.log(arguments);
 }
@@ -365,7 +367,7 @@ function refreshGlobalMetric() {
     }
 
     // $('html').css({marginRight: SNAPSHOT_WIDTH});
-    $('#'+PREFIX+'viewport').width(SNAPSHOT_WIDTH);
+    $('#'+PREFIX+'viewport').width(SNAPSHOT_WIDTH + BORDER_WIDTH_SNAPSHOT);
     $('#'+PREFIX+'snapshot').height(SNAPSHOT_HEIGHT);
     $('#'+PREFIX+'thumbnail').height(THUMBNAIL_HEIGHT);
 }

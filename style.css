@@ -22,6 +22,7 @@
     width: 100%;
     background-color: rgba(0%, 0%, 0%, 0.2);
     cursor: ns-resize;
+    border-left: 3px solid transparent;
 }
 #monocle-magnifier {
     position: absolute;
