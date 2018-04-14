@@ -1,5 +1,8 @@
 # Changelog
 
+## Version 4.2
+* Improve performance.
+
 ## Version 4.1
 * Fix magnifier to sync with mouse move.
 
