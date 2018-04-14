@@ -413,7 +413,8 @@ function bindDragEvent() {
     var $thumbnail = $('#'+PREFIX+'thumbnail');
     $thumbnail.mousedown(function(initEvt) {
         var start = getMouseYOnVisibleWindow(initEvt);
-        var originTop = parseInt($thumbnail.css('top'), 10);
+        // var originTop = parseInt($thumbnail.css('top'), 10);
+        var originTop = parseInt($thumbnail.get(0).style.transform.replace(/[^0-9\-.,]/g, '').split(',').pop(), 10);
         if (DEBUG) {drawLineAtTop(originTop);}
         originTop = isNaN(originTop) ? 0 : originTop;
 
@@ -473,10 +474,13 @@ function bindHoverEvent() {
             var offsetY = getProjectedOffset(yToSnapshot, SNAPSHOT_HEIGHT, CONTENT_HEIGHT, 1.0 * CONF_SIZE_MAGNIFIER / CONTENT_HEIGHT);
             var offsetX = getProjectedOffset(xToSnapshot, SNAPSHOT_WIDTH, CONTENT_WIDTH, 1.0 * CONF_SIZE_MAGNIFIER / CONTENT_WIDTH);
             // console.groupEnd(xToSnapshot, yToSnapshot)
-            $('#'+PREFIX+'magnifier canvas').css({
-                'top': -1 * offsetY,
-                'left': -1 * offsetX,
-                'position': 'absolute'
+            // $('#'+PREFIX+'magnifier canvas').css({
+            //     'top': -1 * offsetY,
+            //     'left': -1 * offsetX,
+            //     'position': 'absolute'
+            // });
+            $('#' + PREFIX + 'magnifier canvas').css({
+                'transform': 'translate(' + (-1 * offsetX) + 'px, ' + -1 * offsetY  + 'px)'
             });
         }
     });
@@ -516,8 +520,10 @@ function getMouseYOnVisibleWindow(evt) {
 function scrollByWindow(windowTop) {
     var scrollRatio = 1.0 * windowTop / (CONTENT_HEIGHT - VIEWPORT_HEIGHT);
     scrollRatio = fixBound(scrollRatio, 0, 1);
-    $('#'+PREFIX+'snapshot').css('top', 0 - (SNAPSHOT_PLAYGROUND * scrollRatio));
-    $('#'+PREFIX+'thumbnail').css('top', (THUMBNAIL_PLAYGROUND * scrollRatio));
+    // $('#'+PREFIX+'snapshot').css('top', 0 - (SNAPSHOT_PLAYGROUND * scrollRatio));
+    // $('#'+PREFIX+'thumbnail').css('top', (THUMBNAIL_PLAYGROUND * scrollRatio));
+    $('#' + PREFIX + 'snapshot').css('transform', 'translateY(' + (0 - (SNAPSHOT_PLAYGROUND * scrollRatio)) + 'px)');
+    $('#' + PREFIX + 'thumbnail').css('transform', 'translateY(' + (THUMBNAIL_PLAYGROUND * scrollRatio) + 'px)');
 }
 
 function scrollByThumbnail(newTop) {

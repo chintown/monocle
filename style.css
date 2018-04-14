@@ -32,6 +32,13 @@
     border: 3px solid darkgrey;
     display: none;
 }
+#monocle-thumbnail,
+#monocle-snapshot,
+#monocle-magnifier canvas {
+    transform: translateZ(0);
+    will-change: transform;
+}
+
 #line {
     width: 100%;
     height: 2px;
