@@ -374,6 +374,8 @@ function refreshGlobalMetric() {
 
 function bindScrollEvent() {
     $(window).scroll(function(){
+        $('#' + PREFIX + 'magnifier').hide();
+        
         expandViewport();
         delayedCollapseViewport();
 
@@ -445,7 +447,7 @@ function monocleTempMousedown(e){
 
 function getProjectedOffset(fromOffset, fromRange, toRange, viewportRatio) {
     var ratio = 1.0 * fromOffset / fromRange;
-    ratio -= 0.5 * viewportRatio;
+    ratio -= 0.5 * viewportRatio; // center magnifier
     ratio = fixBound(ratio, 0, 1 - viewportRatio);
     var toOffset = ratio * toRange;
     return toOffset;
@@ -461,10 +463,14 @@ function bindJumpEvent() {
 function bindHoverEvent() {
     var $viewport = $('#' + PREFIX + 'viewport');
 
-    $('#'+PREFIX+'snapshot').mousemove(function (evt) {
+    $('#' + PREFIX + 'snapshot, ' + '#' + PREFIX + 'thumbnail').mousemove(function (evt) {
         if (window.USER_SETTINGS['magnifier']) {
-            var offsetY = getProjectedOffset(evt.offsetY, SNAPSHOT_HEIGHT, CONTENT_HEIGHT, 1.0 * CONF_SIZE_MAGNIFIER / CONTENT_HEIGHT);
-            var offsetX = getProjectedOffset(evt.offsetX, SNAPSHOT_WIDTH, CONTENT_WIDTH, 1.0 * CONF_SIZE_MAGNIFIER / CONTENT_WIDTH);
+            var xToSnapshot = evt.pageX - $('#' + PREFIX + 'snapshot').offset().left;
+            var yToSnapshot = evt.pageY - $('#' + PREFIX + 'snapshot').offset().top;
+            // console.group(xToSnapshot,yToSnapshot)
+            var offsetY = getProjectedOffset(yToSnapshot, SNAPSHOT_HEIGHT, CONTENT_HEIGHT, 1.0 * CONF_SIZE_MAGNIFIER / CONTENT_HEIGHT);
+            var offsetX = getProjectedOffset(xToSnapshot, SNAPSHOT_WIDTH, CONTENT_WIDTH, 1.0 * CONF_SIZE_MAGNIFIER / CONTENT_WIDTH);
+            // console.groupEnd(xToSnapshot, yToSnapshot)
             $('#'+PREFIX+'magnifier canvas').css({
                 'top': -1 * offsetY,
                 'left': -1 * offsetX,

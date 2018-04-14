@@ -1,5 +1,8 @@
 # Changelog
 
+## Version 4.1
+* Fix magnifier to sync with mouse move.
+
 ## Version 4.0
 
 * Add whitelist and blacklist.(Suggested by [Mahdy dar](https://plus.google.com/101853672433809194643).)
