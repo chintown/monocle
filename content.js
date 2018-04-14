@@ -171,12 +171,15 @@ function buildByCanvas(fromCanvas) {
     delayedCollapseViewport()
 }
 function jsSnapshot() {
+    var $viewport = $('#' + PREFIX + 'viewport');
+    $viewport.hide();
     // http://html2canvas.hertzen.com/documentation.html
     html2canvas(document.body, {
         allowTaint: true,
         useCORS: true,
         letterRendering: true,
         onrendered: function(canvas) {
+            $viewport.show();
             buildByCanvas(canvas);
             $(window).scrollTop(window.LAST_SCROLL_POSITION);
         },
