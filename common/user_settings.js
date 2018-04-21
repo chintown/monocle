@@ -41,7 +41,7 @@ function updateSetting(name, value) {
 function updateSettingIfMissing(name, value) {
   if (!window.USER_SETTINGS.hasOwnProperty(name)) {
     log('updateSetting(new setting)', name, value);
-    window.USER_SETTINGS[name] = value;
+    updateSetting(name, value)
     return true;
   }
   return false;

@@ -57,11 +57,11 @@ function updateUiWithSettings() {
     document.getElementById('delay_sec_auto_hide').value = parseFloat(s['delay_sec_auto_hide']);
   }
   if (typeof s['blacklist'] !== 'undefined' && s['blacklist'] !== '') {
-    console.log('loaded blacklist', s['blacklist'], "`" + s['blacklist'].join("\n") + "`")
+    // console.log('loaded blacklist', s['blacklist'], "`" + s['blacklist'].join("\n") + "`")
     document.getElementById('blacklist').value = s['blacklist'].join("\n");
   }
   if (typeof s['whitelist'] !== 'undefined' && s['whitelist'] !== '') {
-    console.log('loaded whitelist', s['whitelist'], "`" + s['whitelist'].join("\n") + "`")
+    // console.log('loaded whitelist', s['whitelist'], "`" + s['whitelist'].join("\n") + "`")
     document.getElementById('whitelist').value = s['whitelist'].join("\n");
   }
 }

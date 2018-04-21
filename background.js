@@ -22,17 +22,17 @@ loadScript('common/dev.js', function () {
 // dispatching auto on
 function isInList(identifier, url) {
     var result = {};
-    console.log('check whether', url, 'is in', identifier)
+    log('check whether', url, 'is in', identifier)
     window.USER_SETTINGS[identifier].map(function (rawPtn) {
-        console.log('[coded pattern]', rawPtn)
+        log('[coded pattern]', rawPtn)
         var ptn = rawPtn.replace(/([.+?{}\/])/g, '\\$1').replace(/\*+/g, '.*');
-        console.log('[regex pattern]', ptn)
+        log('[regex pattern]', ptn)
         ptn = new RegExp(ptn, 'g')
         var isMatched = !!url.match(ptn)
         result[isMatched] = result[isMatched] ? result[isMatched].concat(rawPtn) : [rawPtn];
     })
     var isInList = result.true && result.true.length
-    console.log(result, isInList ? 'In ' + identifier : 'not in ' + identifier + ' ....');
+    log(result, isInList ? 'In ' + identifier : 'not in ' + identifier + ' ....');
     return isInList;
 }
 
