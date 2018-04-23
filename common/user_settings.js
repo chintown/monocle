@@ -1,3 +1,27 @@
+function tryMigrateToSyncStorage() {
+  log('tryMigrateToSyncStorage');
+  if (window.SHOULD_MIGRATE) {
+    window.SHOULD_MIGRATE = false;
+    window.USER_SETTINGS.useSync = true;
+    chrome.storage.local.set(window.USER_SETTINGS);
+    chrome.storage.sync.set(window.USER_SETTINGS);
+  }
+}
+(function setupStorage() {
+  log('setupStorage');
+  window.StoragePromise = new Promise(function (resolve, reject) {
+    chrome.storage.local.get(['useSync'], function (settings) {
+      if (!!settings.useSync) {
+        log('switch to chrome.storage.sync');
+        resolve(chrome.storage.sync);
+      } else {
+        window.SHOULD_MIGRATE = true;
+        resolve(chrome.storage.local);
+      }
+    });
+  })
+
+}());
 function loadSettingsFromStorage(callback) {
   log('loadSettingsFromStorage');
   var expectedNames = [
@@ -10,12 +34,14 @@ function loadSettingsFromStorage(callback) {
     'blacklist',
     'whitelist',
   ]
-  chrome.storage.local.get(expectedNames, function(settings) {
-    window.USER_SETTINGS = settings || {};
-    completeSettings();
+  window.StoragePromise.then(function(storage) {
+    storage.get(expectedNames, function (settings) {
+      window.USER_SETTINGS = settings || {};
+      completeSettings();
 
-  log('loadSettingsFromStorage', 'END');
-    callback();
+      log('loadSettingsFromStorage', 'END');
+      callback();
+    });
   });
 }
 function completeSettings() {
@@ -50,10 +76,17 @@ function updateSettingIfMissing(name, value) {
 function saveSettingsToStorage() {
   log('saveSettingsToStorage');
   dumpSettings('saved');
-  chrome.storage.local.set(window.USER_SETTINGS);
+  window.StoragePromise.then(function (storage) {
+    storage.set(window.USER_SETTINGS)
+    storage.getBytesInUse(function () {
+      console.warn(arguments)
+    });
+  });
 }
 
 function dumpSettings(context) {
   log('dumpSettings');
   log(window.USER_SETTINGS, context);
 }
+
+window.addEventListener('unload', tryMigrateToSyncStorage);
