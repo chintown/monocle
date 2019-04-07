@@ -1,5 +1,10 @@
 # Changelog
 
+## Version 5.0
+* Support synchronizing settings if [Extensions Sync](chrome://settings/syncSetup) is turned on in the browsers.
+* Update default styles and behaviors to make it less obtrusive.
+* Update documentation.
+
 ## Version 4.2
 * Improve performance.
 

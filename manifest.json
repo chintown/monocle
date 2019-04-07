@@ -1,7 +1,7 @@
 {
     "manifest_version": 2,
     "name": "Scroll Preview",
-    "version": "4.2",
+    "version": "5.0",
 
     "description": "Scroll Preview integrates a whole-page preview with scrollbar that inspired by Sublime Text's mini map.",
     "icons": {
