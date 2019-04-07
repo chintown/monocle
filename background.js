@@ -14,6 +14,8 @@ loadScript('common/dev.js', function () {
     loadScript('common/user_settings.js', function () {
         loadSettingsFromStorage(function () {
             updateAutoMark();
+
+            chrome.storage.onChanged.addListener(updateSettingsLocally);
         });
     });
 });

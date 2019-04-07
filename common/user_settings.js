@@ -1,41 +1,69 @@
+var settingNames = [
+  'keyboard_shortcut',
+  'button_functionality',
+  'magnifier',
+  'last_auto_status',
+  'width_preview',
+  'delay_sec_auto_hide',
+  'blacklist',
+  'whitelist',
+  'use_sync',
+  'stamp',
+];
+function getLocalSettings() {
+  log('getLocalSettings');
+  return new Promise(function(resolve, reject) {
+    chrome.storage.local.get(settingNames, function (settings) {
+      if (!Object.keys(settings).length) {
+        reject(new Error('local settings not found'));
+      }
+      resolve(settings);
+    });
+  });
+}
 function tryMigrateToSyncStorage() {
   log('tryMigrateToSyncStorage');
   if (window.SHOULD_MIGRATE) {
     window.SHOULD_MIGRATE = false;
-    window.USER_SETTINGS.useSync = true;
+    window.USER_SETTINGS.use_sync = true;
+    window.USER_SETTINGS.stamp = +new Date();
     chrome.storage.local.set(window.USER_SETTINGS);
     chrome.storage.sync.set(window.USER_SETTINGS);
   }
 }
 (function setupStorage() {
   log('setupStorage');
+  // window.StoragePromise = Promise.resolve(chrome.storage.local);
+  // return;
   window.StoragePromise = new Promise(function (resolve, reject) {
-    chrome.storage.local.get(['useSync'], function (settings) {
-      if (!!settings.useSync) {
-        log('switch to chrome.storage.sync');
-        resolve(chrome.storage.sync);
-      } else {
-        window.SHOULD_MIGRATE = true;
-        resolve(chrome.storage.local);
-      }
-    });
+    getLocalSettings()
+      .then(function(settings) {
+        if (!!settings.use_sync) {
+          log('switch to chrome.storage.sync');
+          window.SHOULD_SHOW_LOCAL = true;
+          resolve(chrome.storage.sync);
+        } else {
+          log('try migrate to chrome.storage.sync');
+          window.SHOULD_MIGRATE = true;
+          resolve(chrome.storage.local);
+        }
+      })
+      .catch(function(e) {
+        if (e.message === 'local settings not found') {
+          log('default to chrome.storage.sync');
+          resolve(chrome.storage.sync);
+        } else {
+          reject(e);
+        }
+      });
+    
   })
 
 }());
 function loadSettingsFromStorage(callback) {
   log('loadSettingsFromStorage');
-  var expectedNames = [
-    'keyboard_shortcut',
-    'button_functionality',
-    'magnifier',
-    'last_auto_status',
-    'width_preview',
-    'delay_sec_auto_hide',
-    'blacklist',
-    'whitelist',
-  ]
   window.StoragePromise.then(function(storage) {
-    storage.get(expectedNames, function (settings) {
+    storage.get(settingNames, function (settings) {
       window.USER_SETTINGS = settings || {};
       completeSettings();
 
@@ -77,10 +105,8 @@ function saveSettingsToStorage() {
   log('saveSettingsToStorage');
   dumpSettings('saved');
   window.StoragePromise.then(function (storage) {
-    storage.set(window.USER_SETTINGS)
-    storage.getBytesInUse(function () {
-      console.warn(arguments)
-    });
+    window.USER_SETTINGS.stamp = +new Date();
+    storage.set(window.USER_SETTINGS);
   });
 }
 
@@ -89,4 +115,27 @@ function dumpSettings(context) {
   log(window.USER_SETTINGS, context);
 }
 
+function clearSettings() {
+  chrome.storage.local.clear(function () {
+    var error = chrome.runtime.lastError;
+    if (error) {
+      console.error(error);
+    }
+  });
+}
+
+function updateSettingsLocally(changes, namespace) {
+  if ((+new Date()) - (+changes.stamp.newValue) < 100) {
+    log('ignore onChange in local');
+    return;
+  }
+  for (var key in changes) {
+    var storageChange = changes[key];
+    log('update setting "' + key + '": "' + storageChange.oldValue + '" -> "' + storageChange.newValue + '" in background only.')
+    window.USER_SETTINGS[key] = storageChange.newValue;
+  }
+}
+
 window.addEventListener('unload', tryMigrateToSyncStorage);
+
+chrome.storage.onChanged.addListener(updateSettingsLocally);

@@ -228,3 +228,16 @@ ul.menu li.tabActive a {
 textarea {
   margin-top: 18px;
 }
+
+.hidden {
+  display: none;
+}
+
+#banner {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  line-height: 20px;
+  background-color: bisque;
+}

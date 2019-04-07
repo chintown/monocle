@@ -64,6 +64,15 @@ function updateUiWithSettings() {
     // console.log('loaded whitelist', s['whitelist'], "`" + s['whitelist'].join("\n") + "`")
     document.getElementById('whitelist').value = s['whitelist'].join("\n");
   }
+  if (window.SHOULD_SHOW_LOCAL) {
+    getLocalSettings()
+      .then(function(settings) {
+        var domDump = document.querySelector('#local_storage');
+        var strDump = JSON.stringify(settings, null, 2);
+        domDump.innerHTML = strDump;
+        $(domDump).closest('.option-section').removeClass('hidden');
+      });
+  }
 }
 function bindUiWithSettings() {
   log('bindUiWithSettings');
@@ -149,6 +158,11 @@ function bindUiWithSettings() {
   var getWhiteList = function(e) { return getlist(e, 'whitelist') }
   document.getElementById('whitelist').addEventListener('blur', getWhiteList);
   document.getElementById('blacklist').addEventListener('blur', getBlackList);
+}
+
+function showBanner(msg) {
+  document.querySelector('#banner').innerText = msg;
+  document.querySelector('#banner').removeAttribute('hidden');
 }
 
 // ---------------------------------------------------------------------
