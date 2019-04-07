@@ -80,7 +80,7 @@ function completeSettings() {
   isDirty = updateSettingIfMissing('magnifier', true) || isDirty;
   isDirty = updateSettingIfMissing('last_auto_status', true) || isDirty;
   isDirty = updateSettingIfMissing('width_preview', 100) || isDirty;
-  isDirty = updateSettingIfMissing('delay_sec_auto_hide', 3) || isDirty;
+  isDirty = updateSettingIfMissing('delay_sec_auto_hide', 1) || isDirty;
   isDirty = updateSettingIfMissing('blacklist', []) || isDirty;
   isDirty = updateSettingIfMissing('whitelist', []) || isDirty;
   if (isDirty) {
