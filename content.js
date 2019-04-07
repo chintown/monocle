@@ -2,7 +2,7 @@ var DEBUG = false;
 var PREFIX = 'monocle-';
 
 var CONF_SIZE_MAGNIFIER = 300;
-var CONF_WIDTH_COLLAPSED = 20;
+var CONF_WIDTH_COLLAPSED = 1;
 
 var BORDER_WIDTH_SNAPSHOT = 3;
 
