@@ -44,7 +44,7 @@
             ],
             "css": ["style.css"],
             "js": [
-                "libs/jquery-2.0.3.min.js",
+                "libs/jquery-2.0.3.js",
                 "libs/html2canvas.js",
                 "content.js"
             ]
@@ -58,8 +58,7 @@
         "*://*/*"
     ],
     "web_accessible_resources": [
-        "libs/jquery-2.0.3.js",
-        "libs/jquery-2.0.3.min.map"
+        "libs/jquery-2.0.3.js"
     ],
     "content_security_policy": "script-src 'self' https://ssl.google-analytics.com; object-src 'self'"
 }
