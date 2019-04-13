@@ -57,6 +57,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, callback) {
             var shouldAutoLoad = 
                 (window.USER_SETTINGS['button_functionality'] === 'basic' && isInList('whitelist', request.url))
                 || (window.USER_SETTINGS['button_functionality'] === 'advanced' && !isInList('blacklist', request.url))
+                || (window.USER_SETTINGS['button_functionality'] === 'conditional' && (isInList('whitelist', request.url) || request.isArticle && !isInList('blacklist', request.url)))
             callback(shouldAutoLoad);
             break;
         case "reload":

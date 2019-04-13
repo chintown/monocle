@@ -47,8 +47,9 @@ function updateUiWithSettings() {
   log('updateUiWithSettings');
   var s = window.USER_SETTINGS;
   // document.getElementById('shortcut').value = s['keyboard_shortcut'];
-  if (s['button_functionality'] === 'advanced') {
-
+  if (s['button_functionality'] === 'conditional') {
+    document.getElementById('app_conditional').checked = true;
+  } else if (s['button_functionality'] === 'advanced') {
     document.getElementById('app_advanced').checked = true;
   } else {
     document.getElementById('app_basic').checked = true;
@@ -87,6 +88,12 @@ function bindUiWithSettings() {
 
   //   trackEvent({'name': 'option', 'detail': 'keyboard_shortcut.'+e.target.value});
   // });
+  document.getElementById('app_conditional').addEventListener('change', function (e) {
+    updateSetting('button_functionality', 'conditional');
+    chrome.runtime.sendMessage({msg: "reload"});
+
+    trackEvent({'name': 'option', 'detail': 'button_functionality.conditional'});
+  });
   document.getElementById('app_advanced').addEventListener('change', function (e) {
     updateSetting('button_functionality', 'advanced');
     chrome.runtime.sendMessage({msg: "reload"});

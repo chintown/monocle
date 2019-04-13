@@ -544,11 +544,18 @@ function scrollByThumbnail(newTop) {
     window.scrollTo(0, (CONTENT_HEIGHT - VIEWPORT_HEIGHT) * scrollRatio);
 }
 
+function isArticle() {
+    return domAll('article').length ||
+        domAll('meta[property="og:type"][content="article"]').length ||
+        domAll('meta[property^="article"]').length;
+}
+
 document.addEventListener('readystatechange', event => {
     if (event.target.readyState === 'complete') {
         chrome.runtime.sendMessage({
             msg: "land",
-            url: window.location.href
+            url: window.location.href,
+            isArticle: isArticle(),
         }, function (shouldAutoLoad) {
             if (shouldAutoLoad) {
                 eventDispatcher('basic');
