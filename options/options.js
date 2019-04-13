@@ -1,4 +1,4 @@
-$(document).ready(function() {
+document.addEventListener("DOMContentLoaded", function () {
   init();
 });
 
@@ -13,15 +13,19 @@ function init() {
 }
 
 function resetTabs() {
-  $('ul.menu a').parent().removeClass('tabActive');
-  $('#options > div').hide();
+  domAll('ul.menu a').forEach(node => {
+    node.parentNode.classList.remove('tabActive');
+  });
+  domAll('#options > div').forEach(node => {
+    node.setAttribute('hidden', 'true');
+  });
 }
 
 function switchTab(hash) {
   resetTabs()
   hash = hash || '#basics';
-  $('.menu a[href="' + hash + '"').parent().addClass('tabActive');
-  $(hash).fadeIn();
+  dom('.menu a[href="' + hash + '"').parentNode.classList.add('tabActive');
+  dom(hash).removeAttribute('hidden');
 }
 
 function initializeTabs() {
@@ -29,11 +33,13 @@ function initializeTabs() {
   var hash = window.location.hash;
   switchTab(hash);
 
-  $("ul.menu").on("click", "li", function() {
-    hash = $(this).find('a').attr('href');
+  dom("ul.menu").addEventListener('click', function(e) {
+    if (e.target === e.currentTarget) {
+      return;
+    }
+    hash = dom('a', e.target, true).getAttribute('href');
     window.location.hash = hash;
     switchTab(hash);
-    return false;
   });
 }
 
@@ -70,7 +76,7 @@ function updateUiWithSettings() {
         var domDump = document.querySelector('#local_storage');
         var strDump = JSON.stringify(settings, null, 2);
         domDump.innerHTML = strDump;
-        $(domDump).closest('.option-section').removeClass('hidden');
+        domDump.closest('.option-section').classList.remove('hidden');
       });
   }
 }
