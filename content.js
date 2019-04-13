@@ -1,4 +1,4 @@
-var DEBUG = true;
+var DEBUG = false;
 var PREFIX = 'monocle-';
 
 var CONF_SIZE_MAGNIFIER = 300;
