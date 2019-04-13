@@ -1,5 +1,3 @@
-console.log('dev stamp', 3);
-
 function domSelf(selector, context) {
     return context.matches(selector)
         ? context
@@ -12,10 +10,19 @@ function dom(selector, context, shouldIncludeSelf) {
             || (shouldIncludeSelf && domSelf(selector, scope));
 }
 function domAll(selector, context) {
-    return (context || document).querySelectorAll(selector);
+    return [].slice.call((context || document).querySelectorAll(selector));
 }
 function domNew(input) {
     var container = document.createElement('div');
     container.innerHTML = input;
     return container.children[0];
+}
+function offset(el) {
+    var rect = el.getBoundingClientRect(),
+        scrollLeft = window.pageXOffset || document.documentElement.scrollLeft,
+        scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    return {
+        top: rect.top + scrollTop,
+        left: rect.left + scrollLeft
+    }
 }

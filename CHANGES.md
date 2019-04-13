@@ -4,6 +4,7 @@
 * Support synchronizing settings if [Extensions Sync](chrome://settings/syncSetup) is turned on in the browsers.
 * Update default styles and behaviors to make it less obtrusive.
 * Update documentation.
+* Remove jQuery dependency.
 
 ## Version 4.2
 * Improve performance.

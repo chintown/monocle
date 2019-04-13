@@ -44,7 +44,6 @@
             ],
             "css": ["style.css"],
             "js": [
-                "libs/jquery-2.0.3.js",
                 "libs/jquery-shim.js",
                 "libs/html2canvas.js",
                 "content.js"
@@ -59,7 +58,6 @@
         "*://*/*"
     ],
     "web_accessible_resources": [
-        "libs/jquery-2.0.3.js",
         "libs/jquery-shim.js"
     ],
     "content_security_policy": "script-src 'self' https://ssl.google-analytics.com; object-src 'self'"

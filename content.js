@@ -1,4 +1,4 @@
-var DEBUG = false;
+var DEBUG = true;
 var PREFIX = 'monocle-';
 
 var CONF_SIZE_MAGNIFIER = 300;
@@ -17,37 +17,36 @@ function log() {
         xhr.send(formData);
     }
     function drawLineAtTop(top) {
-        var $line = $('#line').length === 0 ? createLine() : $('#line');
-        $line.css('top', top);
+        var $line = dom('#line') || createLine();
+        $line.style.top = top + 'px';
     }
     function createLine() {
-        var $line = $('<div id="line"></div>');
-        $('body').append($line);
+        var $line = domNew('<div id="line"></div>');
+        dom('body').appendChild($line);
         return $line;
     }
     function exportImage(canvas) {
-        var $img = $('<img/>').attr('src', canvas.toDataURL("image/png"));
-        $('body').append($img);
+        var $img = domNew('<img/>').attr('src', canvas.toDataURL("image/png"));
+        dom('body').appendChild($img);
     }
 
 // --
 
 function setupSidebar() {
-    var $viewport = $('<div></div>').attr('id', PREFIX+'viewport');
-    var $snapshot = $('<div></div>').attr('id', PREFIX+'snapshot');
-    var $thumbnail = $('<div></div>').attr('id', PREFIX+'thumbnail');
-    var $magnifier = $('<div></div>').attr('id', PREFIX+'magnifier');
-    $magnifier.css({
-        width: CONF_SIZE_MAGNIFIER,
-        height: CONF_SIZE_MAGNIFIER,
-        left: -1 * (CONF_SIZE_MAGNIFIER + 15),
-        borderRadius: CONF_SIZE_MAGNIFIER
-    });
-
-    $viewport.append($snapshot);
-    $viewport.append($thumbnail);
-    $viewport.append($magnifier);
-    $('body').append($viewport);
+    var $viewport = domNew('<div id="' + PREFIX + 'viewport"></div>');
+    var $snapshot = domNew('<div id="' + PREFIX + 'snapshot"></div>');
+    var $thumbnail = domNew('<div id="' + PREFIX + 'thumbnail"></div>');
+    var $magnifier = domNew('<div id="' + PREFIX + 'magnifier"></div>');
+    
+    $magnifier.style.width = CONF_SIZE_MAGNIFIER + 'px';
+    $magnifier.style.height = CONF_SIZE_MAGNIFIER + 'px';
+    $magnifier.style.left = -1 * (CONF_SIZE_MAGNIFIER + 15) + 'px';
+    $magnifier.style.borderRadius = CONF_SIZE_MAGNIFIER + 'px';
+    
+    $viewport.appendChild($snapshot);
+    $viewport.appendChild($thumbnail);
+    $viewport.appendChild($magnifier);
+    dom('body').appendChild($viewport);
     collapseViewport();
 }
 
@@ -57,21 +56,21 @@ function cancelCollapseViewport() {
 }
 
 function collapseViewport() {
-    var $viewport = $('#' + PREFIX + 'viewport');
-    if ($viewport.hasClass(PREFIX + 'mouseover')) {
+    var $viewport = dom('#' + PREFIX + 'viewport');
+    if ($viewport.classList.contains(PREFIX + 'mouseover')) {
         return;
     }
 
     cancelCollapseViewport();
 
     log('collapseViewport');
-    $viewport.addClass(PREFIX + 'collapsed');
-    $viewport.css({ right: (-1 * (SNAPSHOT_WIDTH - CONF_WIDTH_COLLAPSED)) + 'px' })
+    $viewport.classList.add(PREFIX + 'collapsed');
+    $viewport.style.right = (-1 * (SNAPSHOT_WIDTH - CONF_WIDTH_COLLAPSED)) + 'px';
 }
 
 function delayedCollapseViewport() {
-    var $viewport = $('#' + PREFIX + 'viewport');
-    if ($viewport.hasClass(PREFIX + 'mouseover')) {
+    var $viewport = dom('#' + PREFIX + 'viewport');
+    if ($viewport.classList.contains(PREFIX + 'mouseover')) {
         return;
     }
 
@@ -80,34 +79,34 @@ function delayedCollapseViewport() {
     log('delayedCollapseViewport')
     // $viewport.addClass(PREFIX + 'collapsed');
     window[PREFIX + 'Timer'] = setTimeout(function () {
-        if ($viewport.hasClass(PREFIX + 'mouseover')) {
+        if ($viewport.classList.contains(PREFIX + 'mouseover')) {
             return;
         }
-        $viewport.addClass(PREFIX + 'collapsed');
-        $viewport.css({ right: (-1 * (SNAPSHOT_WIDTH - CONF_WIDTH_COLLAPSED)) + 'px' })
+        $viewport.classList.add(PREFIX + 'collapsed');
+        $viewport.style.right = (-1 * (SNAPSHOT_WIDTH - CONF_WIDTH_COLLAPSED)) + 'px';
     }, CONF_DELAY_COLLAPSED)
 }
 
 function expandViewport() {
-    var $viewport = $('#' + PREFIX + 'viewport');
-    if ($viewport.hasClass(PREFIX + 'mouseover')) {
+    var $viewport = dom('#' + PREFIX + 'viewport');
+    if ($viewport.classList.contains(PREFIX + 'mouseover')) {
         return;
     }
 
     cancelCollapseViewport();
 
     log('expandViewport');
-    $viewport.removeClass(PREFIX + 'collapsed');
-    $viewport.css({ right: 0 })
+    $viewport.classList.remove(PREFIX + 'collapsed');
+    $viewport.style.right = 0;
 }
 
 function setupJsSnapshot() {
-    LAST_SCROLL_POSITION = $(window).scrollTop();
+    LAST_SCROLL_POSITION = window.scrollY;
 
     jsSnapshot();
 }
 function setupSnapshot() {
-    LAST_SCROLL_POSITION = $(window).scrollTop();
+    LAST_SCROLL_POSITION = window.scrollY;
 
     window.SELECTED_SNAPSHOT_METHOD();
     // jsSnapshot();
@@ -158,11 +157,13 @@ function resampleCanvas(fromCanvas, widthOfTarget) {
 function buildByCanvas(fromCanvas) {
     if (window.USER_SETTINGS['magnifier']) {
         var magnifierCanvas = copyCanvas(fromCanvas, CONTENT_WIDTH, CONTENT_HEIGHT);
-        $('#'+PREFIX+'magnifier').empty().append(magnifierCanvas)
+        dom('#'+PREFIX+'magnifier').innerHTML = '';
+        dom('#' + PREFIX + 'magnifier').appendChild(magnifierCanvas)
     }
 
     var snapshotCanvas = copyCanvas(resampleCanvas(fromCanvas, SNAPSHOT_WIDTH), SNAPSHOT_WIDTH, SNAPSHOT_HEIGHT);
-    $('#'+PREFIX+'snapshot').empty().append(snapshotCanvas);
+    dom('#'+PREFIX+'snapshot').innerHTML = '';
+    dom('#' + PREFIX + 'snapshot').appendChild(snapshotCanvas);
 
     expandViewport();
 
@@ -171,17 +172,17 @@ function buildByCanvas(fromCanvas) {
     delayedCollapseViewport()
 }
 function jsSnapshot() {
-    var $viewport = $('#' + PREFIX + 'viewport');
-    $viewport.hide();
+    var $viewport = dom('#' + PREFIX + 'viewport');
+    $viewport.style.display = 'none';
     // http://html2canvas.hertzen.com/documentation.html
     html2canvas(document.body, {
         allowTaint: true,
         useCORS: true,
         letterRendering: true,
         onrendered: function(canvas) {
-            $viewport.show();
+            $viewport.style.display = 'block';
             buildByCanvas(canvas);
-            $(window).scrollTop(window.LAST_SCROLL_POSITION);
+            window.scrollTo(0, window.LAST_SCROLL_POSITION);
         },
         width: CONTENT_WIDTH, //SNAPSHOT_WIDTH,
         height: CONTENT_HEIGHT, //SNAPSHOT_HEIGHT,
@@ -189,35 +190,36 @@ function jsSnapshot() {
     });
 }
 
-function serverSideSnapshot() {
-    var url = 'http://www.chintown.org/monocle/';
-    $.get(url, {
-        'w': VIEWPORT_WIDTH,
-        'h': CONTENT_HEIGHT,
-        'u': encodeURI(window.location.href),
-        'z': window.devicePixelRatio
-    }).done(function(data) {
-        var urlParam = window.location.href.replace(/[^a-zA-Z0-9]/gi, '-').replace(/^https?-+/, '');
-        var imgSrc = url + 'result.php?u=' + encodeURI(urlParam) + '.jpg';
-        log(data);log(imgSrc);
-        var img = new Image();
-        img.width = CONTENT_WIDTH;
-        img.height = CONTENT_HEIGHT;
-        img.addEventListener('load', function(e) {
-            // http://stackoverflow.com/questions/8517879/how-to-rotate-the-existing-content-of-html5-canvas
-            var thumbCanvas = document.createElement("canvas"),
-                thumbCtx = thumbCanvas.getContext("2d");
-            thumbCanvas.width = SNAPSHOT_WIDTH;
-            thumbCanvas.height = SNAPSHOT_HEIGHT;
-            thumbCtx.drawImage(img, 0, 0, SNAPSHOT_WIDTH, SNAPSHOT_HEIGHT);
-            $('#'+PREFIX+'snapshot').empty().append(thumbCanvas);
-            expandViewport();
+// function serverSideSnapshot() {
+//     var url = 'http://www.chintown.org/monocle/';
+//     $.get(url, {
+//         'w': VIEWPORT_WIDTH,
+//         'h': CONTENT_HEIGHT,
+//         'u': encodeURI(window.location.href),
+//         'z': window.devicePixelRatio
+//     }).done(function(data) {
+//         var urlParam = window.location.href.replace(/[^a-zA-Z0-9]/gi, '-').replace(/^https?-+/, '');
+//         var imgSrc = url + 'result.php?u=' + encodeURI(urlParam) + '.jpg';
+//         log(data);log(imgSrc);
+//         var img = new Image();
+//         img.width = CONTENT_WIDTH;
+//         img.height = CONTENT_HEIGHT;
+//         img.addEventListener('load', function(e) {
+//             // http://stackoverflow.com/questions/8517879/how-to-rotate-the-existing-content-of-html5-canvas
+//             var thumbCanvas = document.createElement("canvas"),
+//                 thumbCtx = thumbCanvas.getContext("2d");
+//             thumbCanvas.width = SNAPSHOT_WIDTH;
+//             thumbCanvas.height = SNAPSHOT_HEIGHT;
+//             thumbCtx.drawImage(img, 0, 0, SNAPSHOT_WIDTH, SNAPSHOT_HEIGHT);
+//             dom('#'+PREFIX+'snapshot').innerHTML = '';
+//             dom('#'+PREFIX+'snapshot').appendChild(thumbCanvas);
+//             expandViewport();
 
-            $(window).scrollTop(window.LAST_SCROLL_POSITION);
-        });
-        img.src = imgSrc;
-    });
-}
+//             window.scrollTo(0, window.LAST_SCROLL_POSITION);
+//         });
+//         img.src = imgSrc;
+//     });
+// }
 
 function nativeSnapshot() {
     beforeNativeSnapshoted();
@@ -229,12 +231,15 @@ function beforeNativeSnapshoted() {
     window.SNAPSHOT_POSITIONS = getPartialSnapshotPositions();
 
     // keep status
-    window.LAST_SCROLL_POSITION_FOR_NATIVE_SNAPSHOT = $(window).scrollTop();
-    window.RECOVERED_LIST = $('*').filter(function(){
-       return $(this).css('position') === 'fixed';
+    window.LAST_SCROLL_POSITION_FOR_NATIVE_SNAPSHOT = window.scrollY;
+    window.RECOVERED_LIST = domAll('*').filter(function(node){
+       return window.getComputedStyle(node).position === 'fixed';
     });
-    window.RECOVERED_LIST.addClass('monocle-hidden');
+    window.RECOVERED_LIST.forEach(function(node) {
+        node.classList.add('monocle-hidden');
+    });
     window.BODY_OVERFLOW_STYLE = document.body.style.overflow;
+    dom('#' + PREFIX + 'viewport').style.display = 'none';
     document.body.style.overflow = "hidden";
 }
 function afterNativeSnapshoted() {
@@ -242,8 +247,11 @@ function afterNativeSnapshoted() {
     // $('img').show(); // DEV
 
     // reset status
-    $(window).scrollTop(window.LAST_SCROLL_POSITION_FOR_NATIVE_SNAPSHOT);
-    window.RECOVERED_LIST.removeClass('monocle-hidden');
+    window.scrollTo(0, window.LAST_SCROLL_POSITION_FOR_NATIVE_SNAPSHOT);
+    window.RECOVERED_LIST.forEach(function (node) {
+        node.classList.remove('monocle-hidden');
+    });
+    dom('#' + PREFIX + 'viewport').style.display = 'block';
     document.body.style.overflow = window.BODY_OVERFLOW_STYLE;
 }
 function onNativePartialSnapshoted() {
@@ -255,19 +263,19 @@ function onNativePartialSnapshoted() {
     }
     var position = window.SNAPSHOT_POSITIONS.shift();
     var offsetY = position[1];
-    $(window).scrollTop(offsetY);
+    window.scrollTo(0, offsetY);
 
     // wait until scroll finished
     var handle = window.setInterval(function() {
-        if (Math.abs($(window).scrollTop() - offsetY) <= 2) {
+        if (Math.abs(window.scrollY - offsetY) <= 2) {
             clearInterval(handle);
             nativePartialSnapshot(offsetY, onNativePartialSnapshoted);
         }
     }, 10); // delay helps broken snapshot
 }
 function resetCanvas() {
-    $('#'+PREFIX+'snapshot').empty();
-    $('#'+PREFIX+'magnifier').empty()
+    dom('#'+PREFIX+'snapshot').innerHTML = '';
+    dom('#'+PREFIX+'magnifier').innerHTML = '';
 
     TEMP_CANVAS = document.createElement("canvas"),
     TEMP_CTX = TEMP_CANVAS.getContext("2d");
@@ -330,10 +338,13 @@ function loadGlobalMetric() {
 
 function refreshGlobalMetric() {
     SUPPRESS_CUSTOMIZED_SCROLL = false;
-    VIEWPORT_WIDTH = $('html').width();//window.innerWidth;// || document.body.clientWidth;
+    VIEWPORT_WIDTH = window.innerWidth; //$('html').width();//window.innerWidth;// || document.body.clientWidth;
     VIEWPORT_HEIGHT = window.innerHeight;// || document.body.clientHeight;
     // visible content
-    CONTENT_WIDTH = $('html').width(); //visible width //document.body.scrollWidth;
+    CONTENT_WIDTH = window.innerWidth; //$('html').width(); //visible width //document.body.scrollWidth;
+    // if (window.innerWidth !== $('html').width()) {
+    //     console.error(window.innerWidth, '!==', $('html').width());
+    // }
     CONTENT_HEIGHT = document.body.scrollHeight; // whole height // $('html').height();
     SNAPSHOT_HEIGHT = SNAPSHOT_WIDTH * CONTENT_HEIGHT / CONTENT_WIDTH;
     SNAPSHOT_PLAYGROUND = (SNAPSHOT_HEIGHT > VIEWPORT_HEIGHT)
@@ -370,22 +381,22 @@ function refreshGlobalMetric() {
     }
 
     // $('html').css({marginRight: SNAPSHOT_WIDTH});
-    $('#'+PREFIX+'viewport').width(SNAPSHOT_WIDTH + BORDER_WIDTH_SNAPSHOT);
-    $('#'+PREFIX+'snapshot').height(SNAPSHOT_HEIGHT);
-    $('#'+PREFIX+'thumbnail').height(THUMBNAIL_HEIGHT);
+    dom('#'+PREFIX+'viewport').style.width = (SNAPSHOT_WIDTH + BORDER_WIDTH_SNAPSHOT) + 'px';
+    dom('#'+PREFIX+'snapshot').style.height = (SNAPSHOT_HEIGHT) + 'px';
+    dom('#'+PREFIX+'thumbnail').style.height = (THUMBNAIL_HEIGHT) + 'px';
 }
 // http://stackoverflow.com/questions/1076231/how-to-get-height-of-the-highest-children-element-in-javascript-jquery
 // http://ryanve.com/lab/dimensions/
 
 function bindScrollEvent() {
-    $(window).scroll(function(){
-        $('#' + PREFIX + 'magnifier').hide();
+    window.addEventListener('scroll', function(){
+        dom('#' + PREFIX + 'magnifier').style.display = 'none';
         
         expandViewport();
         delayedCollapseViewport();
 
         trackLastScrollPosition();
-        scrollByWindow($(this).scrollTop());
+        scrollByWindow(window.scrollY);
     });
 }
 function trackLastScrollPosition() {
@@ -393,13 +404,13 @@ function trackLastScrollPosition() {
       clearTimeout(window.SCROLL_TIMEPOUT);
     }
     window.SCROLL_TIMEPOUT = setTimeout(function () {
-        LAST_SCROLL_POSITION = $(window).scrollTop();
+        LAST_SCROLL_POSITION = window.scrollY;
     }, 250, self);
 }
 
 var SCHEDULE_OF_POST_HOOK_RESIZING = -1;
 function bindResizeEvent() {
-    $(window).resize(function () {
+    window.addEventListener('resize', function () {
         clearTimeout(SCHEDULE_OF_POST_HOOK_RESIZING);
         SCHEDULE_OF_POST_HOOK_RESIZING = setTimeout(postHookResizing, 500);
     });
@@ -413,11 +424,11 @@ function postHookResizing() {
 
 function bindDragEvent() {
     var monocleTempMousemove;
-    var $thumbnail = $('#'+PREFIX+'thumbnail');
-    $thumbnail.mousedown(function(initEvt) {
+    var $thumbnail = dom('#'+PREFIX+'thumbnail');
+    $thumbnail.addEventListener('mousedown', function(initEvt) {
         var start = getMouseYOnVisibleWindow(initEvt);
         // var originTop = parseInt($thumbnail.css('top'), 10);
-        var originTop = parseInt($thumbnail.get(0).style.transform.replace(/[^0-9\-.,]/g, '').split(',').pop(), 10);
+        var originTop = parseInt($thumbnail.style.transform.replace(/[^0-9\-.,]/g, '').split(',').pop(), 10);
         if (DEBUG) {drawLineAtTop(originTop);}
         originTop = isNaN(originTop) ? 0 : originTop;
 
@@ -438,12 +449,12 @@ function bindDragEvent() {
             return false;
         };
 
-        $(window).mousemove(monocleTempMousemove);
-        $(document).mousedown(monocleTempMousedown);
+        window.addEventListener('mousemove', monocleTempMousemove);
+        document.addEventListener('mousedown', monocleTempMousedown);
     });
-    $(window).mouseup(function() {
-        $(window).unbind("mousemove", monocleTempMousemove);
-        $(document).unbind("mousedown", monocleTempMousedown);
+    window.addEventListener('mouseup', function() {
+        window.removeEventListener('mousemove', monocleTempMousemove);
+        document.removeEventListener('mousedown', monocleTempMousedown);
     });
 }
 function monocleTempMousedown(e){
@@ -460,19 +471,19 @@ function getProjectedOffset(fromOffset, fromRange, toRange, viewportRatio) {
 }
 
 function bindJumpEvent() {
-    $('#'+PREFIX+'snapshot').click(function (evt) {
+    dom('#'+PREFIX+'snapshot').addEventListener('click', function (evt) {
         var offsetY = getProjectedOffset(evt.offsetY, SNAPSHOT_HEIGHT, CONTENT_HEIGHT, 1.0 * THUMBNAIL_HEIGHT / SNAPSHOT_HEIGHT);
-        $(window).scrollTop(offsetY);
+        window.scrollTo(0, offsetY);
     });
 }
 
 function bindHoverEvent() {
-    var $viewport = $('#' + PREFIX + 'viewport');
+    var $viewport = dom('#' + PREFIX + 'viewport');
 
-    $('#' + PREFIX + 'snapshot, ' + '#' + PREFIX + 'thumbnail').mousemove(function (evt) {
+    dom('#' + PREFIX + 'snapshot, ' + '#' + PREFIX + 'thumbnail').addEventListener('mousemove', function (evt) {
         if (window.USER_SETTINGS['magnifier']) {
-            var xToSnapshot = evt.pageX - $('#' + PREFIX + 'snapshot').offset().left;
-            var yToSnapshot = evt.pageY - $('#' + PREFIX + 'snapshot').offset().top;
+            var xToSnapshot = evt.pageX - offset(dom('#' + PREFIX + 'snapshot')).left;
+            var yToSnapshot = evt.pageY - offset(dom('#' + PREFIX + 'snapshot')).top;
             // console.group(xToSnapshot,yToSnapshot)
             var offsetY = getProjectedOffset(yToSnapshot, SNAPSHOT_HEIGHT, CONTENT_HEIGHT, 1.0 * CONF_SIZE_MAGNIFIER / CONTENT_HEIGHT);
             var offsetX = getProjectedOffset(xToSnapshot, SNAPSHOT_WIDTH, CONTENT_WIDTH, 1.0 * CONF_SIZE_MAGNIFIER / CONTENT_WIDTH);
@@ -482,29 +493,28 @@ function bindHoverEvent() {
             //     'left': -1 * offsetX,
             //     'position': 'absolute'
             // });
-            $('#' + PREFIX + 'magnifier canvas').css({
-                'transform': 'translate(' + (-1 * offsetX) + 'px, ' + -1 * offsetY  + 'px)'
-            });
+            dom('#' + PREFIX + 'magnifier canvas').style.transform = 
+                'translate(' + (-1 * offsetX) + 'px, ' + -1 * offsetY + 'px)';
         }
     });
-    $('#' + PREFIX + 'snapshot, ' + '#' + PREFIX + 'thumbnail').mouseover(function (evt) {
-        if ($viewport.hasClass(PREFIX + 'collapsed')) {
+    dom('#' + PREFIX + 'snapshot, ' + '#' + PREFIX + 'thumbnail').addEventListener('mouseover', function (evt) {
+        if ($viewport.classList.contains(PREFIX + 'collapsed')) {
             expandViewport();
         }
-        $viewport.addClass(PREFIX + 'mouseover');
+        $viewport.classList.add(PREFIX + 'mouseover');
 
         if (window.USER_SETTINGS['magnifier']) {
-            $('#'+PREFIX+'magnifier').show();
+            dom('#'+PREFIX+'magnifier').style.display = 'block';
         }
     });
-    $('#' + PREFIX + 'snapshot,' + '#' + PREFIX + 'thumbnail').mouseout(function (evt) {
-        $viewport.removeClass(PREFIX + 'mouseover')
-        if (!$viewport.hasClass(PREFIX + 'collapsed')) {
+    dom('#' + PREFIX + 'snapshot, ' + '#' + PREFIX + 'thumbnail').addEventListener('mouseout', function (evt) {
+        $viewport.classList.remove(PREFIX + 'mouseover')
+        if (!$viewport.classList.contains(PREFIX + 'collapsed')) {
             delayedCollapseViewport();
         }
 
         if (window.USER_SETTINGS['magnifier']) {
-            $('#'+PREFIX+'magnifier').hide();
+            dom('#'+PREFIX+'magnifier').style.display = 'none';
         }
     });
 }
@@ -517,7 +527,7 @@ function fixBound(input, min, max) {
 }
 
 function getMouseYOnVisibleWindow(evt) {
-    return evt.clientY; // evt.pageY - $(window).scrollTop()
+    return evt.clientY; // evt.pageY - window.scrollY
 }
 
 function scrollByWindow(windowTop) {
@@ -525,21 +535,26 @@ function scrollByWindow(windowTop) {
     scrollRatio = fixBound(scrollRatio, 0, 1);
     // $('#'+PREFIX+'snapshot').css('top', 0 - (SNAPSHOT_PLAYGROUND * scrollRatio));
     // $('#'+PREFIX+'thumbnail').css('top', (THUMBNAIL_PLAYGROUND * scrollRatio));
-    $('#' + PREFIX + 'snapshot').css('transform', 'translateY(' + (0 - (SNAPSHOT_PLAYGROUND * scrollRatio)) + 'px)');
-    $('#' + PREFIX + 'thumbnail').css('transform', 'translateY(' + (THUMBNAIL_PLAYGROUND * scrollRatio) + 'px)');
+    dom('#' + PREFIX + 'snapshot').style.transform = 'translateY(' + (0 - (SNAPSHOT_PLAYGROUND * scrollRatio)) + 'px)';
+    dom('#' + PREFIX + 'thumbnail').style.transform = 'translateY(' + (THUMBNAIL_PLAYGROUND * scrollRatio) + 'px)';
 }
 
 function scrollByThumbnail(newTop) {
     var scrollRatio = 1.0 * newTop / THUMBNAIL_PLAYGROUND;
-    $(window).scrollTop((CONTENT_HEIGHT - VIEWPORT_HEIGHT) * scrollRatio);
+    window.scrollTo(0, (CONTENT_HEIGHT - VIEWPORT_HEIGHT) * scrollRatio);
 }
 
-$(document).ready(function () {
-    chrome.runtime.sendMessage({ msg: "land", url: window.location.href }, function (shouldAutoLoad) {
-        if (shouldAutoLoad) {
-            eventDispatcher('basic');
-        }
-    });
+document.addEventListener('readystatechange', event => {
+    if (event.target.readyState === 'complete') {
+        chrome.runtime.sendMessage({
+            msg: "land",
+            url: window.location.href
+        }, function (shouldAutoLoad) {
+            if (shouldAutoLoad) {
+                eventDispatcher('basic');
+            }
+        });
+    }
 });
 
 function initialize() {
@@ -559,13 +574,13 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     eventDispatcher(request.msg);
 });
 
-function shiftViewport() {
-    var $html = $('html')
-        ,clazz = PREFIX+'enabled';
-    if (!$html.hasClass(clazz)) {
-        $html.addClass(clazz);
-    }
-}
+// function shiftViewport() {
+//     var $html = dom('html')
+//         ,clazz = PREFIX+'enabled';
+//     if (!$html.classList.contains(clazz)) {
+//         $html.classList.add(clazz);
+//     }
+// }
 
 function eventDispatcher(action) {
     chrome.runtime.sendMessage({msg: "config"}, function(userSettings) {
@@ -585,17 +600,17 @@ function eventDispatcher(action) {
         var isNoToggle  = action === 'basic-no-toggle';
         var isChangingMethod = (window.SELECTED_SNAPSHOT_METHOD != window.PREVIOUS_METHOD);
         window.PREVIOUS_METHOD = window.SELECTED_SNAPSHOT_METHOD;
-        var $viewport = $('#'+PREFIX+'viewport');
+        var $viewport = dom('#'+PREFIX+'viewport');
 
         if (isChangingMethod || isNoToggle) {
-            $viewport.remove();
-            $viewport = [];
+            $viewport && $viewport.remove();
+            $viewport = null;
         }
 
-        if ($viewport.length === 0) {
+        if (!$viewport) {
             initialize();
             chrome.runtime.sendMessage({msg: "track", name: "functionality", detail: action}, function() {});
-        } else if (!$viewport.hasClass(PREFIX + 'collapsed')) {
+        } else if (!$viewport.classList.contains(PREFIX + 'collapsed')) {
             collapseViewport();
             // $('html').css({ marginRight: 0 });
             chrome.runtime.sendMessage({msg: "track", name: "functionality", detail: "hide"}, function() {});
