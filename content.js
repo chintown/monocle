@@ -26,7 +26,8 @@ function log() {
         return $line;
     }
     function exportImage(canvas) {
-        var $img = domNew('<img/>').attr('src', canvas.toDataURL("image/png"));
+        var $img = domNew('<img/>');
+        $img.setAttribute('src', canvas.toDataURL("image/png"));
         dom('body').appendChild($img);
     }
 
