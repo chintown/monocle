@@ -53,7 +53,7 @@ h2 {
 a {
   color: #467ecc;
   text-decoration: none;
-  -webkit-transition: color 0.2s linear;
+  transition: color 0.2s linear;
 }
 
 a:hover {
@@ -157,7 +157,7 @@ li.option:first-of-type {
   float: right;
   background-color: #ccc;
   margin: 5px;
-  -webkit-box-shadow: 0px 1px 1px #fff;
+  box-shadow: 0px 1px 1px #fff;
 }
 
 ul.menu {
@@ -188,7 +188,7 @@ ul.menu li.tabActive {
   background-color: #fff;
   border-top: 1px solid #ddd;
   border-bottom: 1px solid #ddd;
-  -webkit-box-shadow: 0px 1px 0px #F7F7F7;
+  box-shadow: 0px 1px 0px #F7F7F7;
 }
 
 ul.menu li.tabActive a {
