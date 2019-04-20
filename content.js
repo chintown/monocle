@@ -10,12 +10,12 @@ function log() {
     if (DEBUG) console.log(arguments);
 }
 
-    function uploadImage(img) {
-        var xhr = new XMLHttpRequest(), formData = new FormData();
-        formData.append("user_uploaded", img);
-        xhr.open("POST", "http://foo.com/", true);
-        xhr.send(formData);
-    }
+    // function uploadImage(img) {
+    //     var xhr = new XMLHttpRequest(), formData = new FormData();
+    //     formData.append("user_uploaded", img);
+    //     xhr.open("POST", "http://foo.com/", true);
+    //     xhr.send(formData);
+    // }
     function drawLineAtTop(top) {
         var $line = dom('#line') || createLine();
         $line.style.top = top + 'px';
