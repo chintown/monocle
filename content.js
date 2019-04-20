@@ -159,12 +159,12 @@ function buildByCanvas(fromCanvas) {
     if (window.USER_SETTINGS['magnifier']) {
         var magnifierCanvas = copyCanvas(fromCanvas, CONTENT_WIDTH, CONTENT_HEIGHT);
         dom('#'+PREFIX+'magnifier').innerHTML = '';
-        dom('#' + PREFIX + 'magnifier').appendChild(magnifierCanvas)
+        dom('#'+PREFIX+'magnifier').appendChild(magnifierCanvas)
     }
 
     var snapshotCanvas = copyCanvas(resampleCanvas(fromCanvas, SNAPSHOT_WIDTH), SNAPSHOT_WIDTH, SNAPSHOT_HEIGHT);
     dom('#'+PREFIX+'snapshot').innerHTML = '';
-    dom('#' + PREFIX + 'snapshot').appendChild(snapshotCanvas);
+    dom('#'+PREFIX+'snapshot').appendChild(snapshotCanvas);
 
     expandViewport();
 
@@ -481,42 +481,48 @@ function bindJumpEvent() {
 function bindHoverEvent() {
     var $viewport = dom('#' + PREFIX + 'viewport');
 
-    dom('#' + PREFIX + 'snapshot, ' + '#' + PREFIX + 'thumbnail').addEventListener('mousemove', function (evt) {
-        if (window.USER_SETTINGS['magnifier']) {
-            var xToSnapshot = evt.pageX - offset(dom('#' + PREFIX + 'snapshot')).left;
-            var yToSnapshot = evt.pageY - offset(dom('#' + PREFIX + 'snapshot')).top;
-            // console.group(xToSnapshot,yToSnapshot)
-            var offsetY = getProjectedOffset(yToSnapshot, SNAPSHOT_HEIGHT, CONTENT_HEIGHT, 1.0 * CONF_SIZE_MAGNIFIER / CONTENT_HEIGHT);
-            var offsetX = getProjectedOffset(xToSnapshot, SNAPSHOT_WIDTH, CONTENT_WIDTH, 1.0 * CONF_SIZE_MAGNIFIER / CONTENT_WIDTH);
-            // console.groupEnd(xToSnapshot, yToSnapshot)
-            // $('#'+PREFIX+'magnifier canvas').css({
-            //     'top': -1 * offsetY,
-            //     'left': -1 * offsetX,
-            //     'position': 'absolute'
-            // });
-            dom('#' + PREFIX + 'magnifier canvas').style.transform = 
-                'translate(' + (-1 * offsetX) + 'px, ' + -1 * offsetY + 'px)';
-        }
+    domAll('#' + PREFIX + 'snapshot, ' + '#' + PREFIX + 'thumbnail').forEach(function(domEl) {
+        domEl.addEventListener('mousemove', function (evt) {
+            if (window.USER_SETTINGS['magnifier']) {
+                var xToSnapshot = evt.pageX - offset(dom('#' + PREFIX + 'snapshot')).left;
+                var yToSnapshot = evt.pageY - offset(dom('#' + PREFIX + 'snapshot')).top;
+                // console.group(xToSnapshot,yToSnapshot)
+                var offsetY = getProjectedOffset(yToSnapshot, SNAPSHOT_HEIGHT, CONTENT_HEIGHT, 1.0 * CONF_SIZE_MAGNIFIER / CONTENT_HEIGHT);
+                var offsetX = getProjectedOffset(xToSnapshot, SNAPSHOT_WIDTH, CONTENT_WIDTH, 1.0 * CONF_SIZE_MAGNIFIER / CONTENT_WIDTH);
+                // console.groupEnd(xToSnapshot, yToSnapshot)
+                // $('#'+PREFIX+'magnifier canvas').css({
+                //     'top': -1 * offsetY,
+                //     'left': -1 * offsetX,
+                //     'position': 'absolute'
+                // });
+                dom('#' + PREFIX + 'magnifier canvas').style.transform =
+                    'translate(' + (-1 * offsetX) + 'px, ' + -1 * offsetY + 'px)';
+            }
+        });
     });
-    dom('#' + PREFIX + 'snapshot, ' + '#' + PREFIX + 'thumbnail').addEventListener('mouseover', function (evt) {
-        if ($viewport.classList.contains(PREFIX + 'collapsed')) {
-            expandViewport();
-        }
-        $viewport.classList.add(PREFIX + 'mouseover');
+    domAll('#' + PREFIX + 'snapshot, ' + '#' + PREFIX + 'thumbnail').forEach(function(domEl) {
+        domEl.addEventListener('mouseover', function (evt) {
+            if ($viewport.classList.contains(PREFIX + 'collapsed')) {
+                expandViewport();
+            }
+            $viewport.classList.add(PREFIX + 'mouseover');
 
-        if (window.USER_SETTINGS['magnifier']) {
-            dom('#'+PREFIX+'magnifier').style.display = 'block';
-        }
+            if (window.USER_SETTINGS['magnifier']) {
+                dom('#' + PREFIX + 'magnifier').style.display = 'block';
+            }
+        });
     });
-    dom('#' + PREFIX + 'snapshot, ' + '#' + PREFIX + 'thumbnail').addEventListener('mouseout', function (evt) {
-        $viewport.classList.remove(PREFIX + 'mouseover')
-        if (!$viewport.classList.contains(PREFIX + 'collapsed')) {
-            delayedCollapseViewport();
-        }
+    domAll('#' + PREFIX + 'snapshot, ' + '#' + PREFIX + 'thumbnail').forEach(function(domEl) {
+        domEl.addEventListener('mouseout', function (evt) {
+            $viewport.classList.remove(PREFIX + 'mouseover')
+            if (!$viewport.classList.contains(PREFIX + 'collapsed')) {
+                delayedCollapseViewport();
+            }
 
-        if (window.USER_SETTINGS['magnifier']) {
-            dom('#'+PREFIX+'magnifier').style.display = 'none';
-        }
+            if (window.USER_SETTINGS['magnifier']) {
+                dom('#' + PREFIX + 'magnifier').style.display = 'none';
+            }
+        });
     });
 }
 
