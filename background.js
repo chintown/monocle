@@ -120,7 +120,7 @@ function toggleAutoSetting() {
     updateAutoMark();
 
     var trackValue = window.USER_SETTINGS['last_auto_status'] ? 'on' : 'off';
-    trackEvent({'name': 'option', 'detail': 'auto_status.'+trackValue});
+    trackEvent({'name': 'option', 'detail': 'auto_status', 'label': trackValue});
 
     return window.USER_SETTINGS['last_auto_status'];
 }
@@ -159,18 +159,16 @@ function cbSnapshot(callback) {
 
 // ---------------------------------------------------------------------
 // google analytics
-var _gaq = _gaq || [];
-_gaq.push(['_setAccount', 'UA-1108382-9']);
-_gaq.push(['_trackPageview']);
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga'); // analytics_debug.js
+ga('create', 'UA-1108382-9', 'auto');
 
-(function() {
-  var ga = document.createElement('script');
-  ga.type = 'text/javascript';
-  ga.async = true;
-  ga.src = 'https://ssl.google-analytics.com/ga.js';
-  var s = document.getElementsByTagName('script')[0];
-  s.parentNode.insertBefore(ga, s);
-})();
+// https://www.shanebart.com/chrome-ext-analytics/
+// https://stackoverflow.com/questions/16135000/how-do-you-integrate-universal-analytics-in-to-chrome-extensions/22152353#22152353
+// https://developers.google.com/analytics/devguides/collection/analyticsjs/tasks#disabling
+ga('set', 'checkProtocolTask', function(){}); // Removes failing protocol check. @see: http://stackoverflow.com/a/22152353/1958200
 
 /**
  * Track a click on a button using the asynchronous tracking API.
@@ -180,9 +178,9 @@ _gaq.push(['_trackPageview']);
  */
 function trackEvent(eventMeta) {
     log('trackEvent', eventMeta.name, eventMeta.detail);
-    if (eventMeta.detail) {
-        _gaq.push(['_trackEvent', eventMeta.name, eventMeta.detail, '']);
-    } else {
-        _gaq.push(['_trackEvent', eventMeta.name, '', '']);
-    }
+    // https://developers.google.com/analytics/devguides/collection/analyticsjs/events
+    // name - > Event Category | detail - > Event Action
+    ga('send', 'event', eventMeta.name, eventMeta.detail || 'default');
 }
+
+ga('send', 'pageview');

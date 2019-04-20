@@ -92,25 +92,25 @@ function bindUiWithSettings() {
     updateSetting('button_functionality', 'conditional');
     chrome.runtime.sendMessage({msg: "reload"});
 
-    trackEvent({'name': 'option', 'detail': 'button_functionality.conditional'});
+    trackEvent({'name': 'option', 'detail': 'button_functionality', 'label': 'conditional'});
   });
   document.getElementById('app_advanced').addEventListener('change', function (e) {
     updateSetting('button_functionality', 'advanced');
     chrome.runtime.sendMessage({msg: "reload"});
 
-    trackEvent({'name': 'option', 'detail': 'button_functionality.advanced'});
+    trackEvent({'name': 'option', 'detail': 'button_functionality', 'label': 'advanced'});
   });
   document.getElementById('app_basic').addEventListener('change', function (e) {
     updateSetting('button_functionality', 'basic');
     chrome.runtime.sendMessage({msg: "reload"});
 
-    trackEvent({'name': 'option', 'detail': 'button_functionality.basic'});
+    trackEvent({'name': 'option', 'detail': 'button_functionality', 'label': 'basic'});
   });
   document.getElementById('magnifier').addEventListener('change', function (e) {
      updateSetting('magnifier', e.target.checked);
      chrome.runtime.sendMessage({msg: "reload"});
 
-     trackEvent({'name': 'option', 'detail': 'magnifier.'+e.target.checked});
+     trackEvent({'name': 'option', 'detail': 'magnifier', 'label': ''+e.target.checked});
   });
   var getWidthOfPreview = function (e) {
      var width = e.target.value;
@@ -121,7 +121,7 @@ function bindUiWithSettings() {
      updateSetting('width_preview', width);
      chrome.runtime.sendMessage({msg: "reload"});
 
-     trackEvent({'name': 'option', 'detail': 'width_preview.'+width});
+     trackEvent({'name': 'option', 'detail': 'width_preview', 'value': width});
   };
   document.getElementById('width_preview').addEventListener('keyup', getWidthOfPreview);
   document.getElementById('width_preview').addEventListener('blur', getWidthOfPreview);
@@ -135,7 +135,7 @@ function bindUiWithSettings() {
     updateSetting('delay_sec_auto_hide', sec);
     chrome.runtime.sendMessage({ msg: "reload" });
 
-    trackEvent({ 'name': 'option', 'detail': 'delay_sec_auto_hide.' + sec });
+    trackEvent({ 'name': 'option', 'detail': 'delay_sec_auto_hide', 'value': sec });
   };
   document.getElementById('delay_sec_auto_hide').addEventListener('keyup', getDelaySecAutoHide);
   document.getElementById('delay_sec_auto_hide').addEventListener('blur', getDelaySecAutoHide);
@@ -165,7 +165,7 @@ function bindUiWithSettings() {
     updateSetting(identifier, listUrlPtns);
     chrome.runtime.sendMessage({ msg: "reload" });
 
-    trackEvent({ 'name': 'option', 'detail': identifier + '.' + listUrlPtns.length });
+    trackEvent({ 'name': 'option', 'detail': identifier, 'value': listUrlPtns.length });
   };
   var getBlackList = function(e) { return getlist(e, 'blacklist') }
   var getWhiteList = function(e) { return getlist(e, 'whitelist') }
@@ -179,19 +179,17 @@ function showBanner(msg) {
 }
 
 // ---------------------------------------------------------------------
+// google analytics
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga'); // analytics_debug.js
+ga('create', 'UA-1108382-9', 'auto');
 
-var _gaq = _gaq || [];
-_gaq.push(['_setAccount', 'UA-1108382-9']);
-_gaq.push(['_trackPageview']);
-
-(function() {
-  var ga = document.createElement('script');
-  ga.type = 'text/javascript';
-  ga.async = true;
-  ga.src = 'https://ssl.google-analytics.com/ga.js';
-  var s = document.getElementsByTagName('script')[0];
-  s.parentNode.insertBefore(ga, s);
-})();
+// https://www.shanebart.com/chrome-ext-analytics/
+// https://stackoverflow.com/questions/16135000/how-do-you-integrate-universal-analytics-in-to-chrome-extensions/22152353#22152353
+// https://developers.google.com/analytics/devguides/collection/analyticsjs/tasks#disabling
+ga('set', 'checkProtocolTask', function(){}); // Removes failing protocol check. @see: http://stackoverflow.com/a/22152353/1958200
 
 /**
  * Track a click on a button using the asynchronous tracking API.
@@ -201,9 +199,7 @@ _gaq.push(['_trackPageview']);
  */
 function trackEvent(eventMeta) {
     log('trackEvent', eventMeta.name, eventMeta.detail);
-    if (eventMeta.detail) {
-        _gaq.push(['_trackEvent', eventMeta.name, eventMeta.detail, '']);
-    } else {
-        _gaq.push(['_trackEvent', eventMeta.name, '', '']);
-    }
+    // https://developers.google.com/analytics/devguides/collection/analyticsjs/events
+    // name - > Event Category | detail - > Event Action
+    ga('send', 'event', eventMeta.name, eventMeta.detail || 'default', eventMeta.label, eventMeta.value);
 }

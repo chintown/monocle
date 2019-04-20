@@ -60,5 +60,5 @@
     "web_accessible_resources": [
         "libs/jquery-shim.js"
     ],
-    "content_security_policy": "script-src 'self' https://ssl.google-analytics.com; object-src 'self'"
+    "content_security_policy": "script-src 'self' https://www.google-analytics.com; object-src 'self'"
 }
