@@ -1,5 +1,8 @@
 # Changelog
 
+## Version 5.1
+* Update labeling of extension icon.
+
 ## Version 5.0
 * Support synchronizing settings if [Extensions Sync](chrome://settings/syncSetup) is turned on in the browsers.
 * Add a "conditional" mode.

@@ -554,6 +554,7 @@ function isArticle() {
 
 document.addEventListener('readystatechange', event => {
     if (event.target.readyState === 'complete') {
+        chrome.runtime.sendMessage({msg: "mark", isActivated: !!dom('#'+PREFIX+'viewport')});
         chrome.runtime.sendMessage({
             msg: "land",
             url: window.location.href,
@@ -564,6 +565,10 @@ document.addEventListener('readystatechange', event => {
             }
         });
     }
+});
+
+window.addEventListener('focus', function() {
+    chrome.runtime.sendMessage({msg: "mark", isActivated: !!dom('#'+PREFIX+'viewport')});
 });
 
 function initialize() {
@@ -617,6 +622,7 @@ function eventDispatcher(action) {
         }
 
         if (!$viewport) {
+            chrome.runtime.sendMessage({msg: "mark", isActivated: true});
             initialize();
             chrome.runtime.sendMessage({msg: "track", name: "functionality", detail: action}, function() {});
         } else if (!$viewport.classList.contains(PREFIX + 'collapsed')) {
