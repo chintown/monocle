@@ -50,3 +50,6 @@
     max-width: initial;
     /* reset from reset */
 }
+#monocle-snapshot canvas {
+    margin: 0 !important;
+}

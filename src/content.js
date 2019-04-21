@@ -1,14 +1,9 @@
-var DEBUG = false;
 var PREFIX = 'monocle-';
 
 var CONF_SIZE_MAGNIFIER = 300;
 var CONF_WIDTH_COLLAPSED = 0;
 
 var BORDER_WIDTH_SNAPSHOT = 3;
-
-function log() {
-    if (DEBUG) console.log(arguments);
-}
 
     // function uploadImage(img) {
     //     var xhr = new XMLHttpRequest(), formData = new FormData();

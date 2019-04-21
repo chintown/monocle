@@ -56,9 +56,7 @@ function tryMigrateToSyncStorage() {
           reject(e);
         }
       });
-    
   })
-
 }());
 function loadSettingsFromStorage(callback) {
   log('loadSettingsFromStorage');
@@ -100,7 +98,6 @@ function updateSettingIfMissing(name, value) {
   }
   return false;
 }
-
 function saveSettingsToStorage() {
   log('saveSettingsToStorage');
   dumpSettings('saved');
@@ -109,12 +106,10 @@ function saveSettingsToStorage() {
     storage.set(window.USER_SETTINGS);
   });
 }
-
 function dumpSettings(context) {
   log('dumpSettings');
   log(window.USER_SETTINGS, context);
 }
-
 function clearSettings() {
   chrome.storage.local.clear(function () {
     var error = chrome.runtime.lastError;
@@ -123,7 +118,6 @@ function clearSettings() {
     }
   });
 }
-
 function updateSettingsLocally(changes, namespace) {
   if ((+new Date()) - (+changes.stamp.newValue) < 100) {
     log('ignore onChange in local');
@@ -137,5 +131,4 @@ function updateSettingsLocally(changes, namespace) {
 }
 
 window.addEventListener('unload', tryMigrateToSyncStorage);
-
 chrome.storage.onChanged.addListener(updateSettingsLocally);

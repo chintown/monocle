@@ -3,11 +3,10 @@ function domSelf(selector, context) {
         ? context
         : undefined;
 }
-
 function dom(selector, context, shouldIncludeSelf) {
     var scope = (context || document);
-    return scope.querySelector(selector) 
-            || (shouldIncludeSelf && domSelf(selector, scope));
+    return (shouldIncludeSelf && domSelf(selector, scope))
+            || scope.querySelector(selector);
 }
 function domAll(selector, context) {
     return [].slice.call((context || document).querySelectorAll(selector));

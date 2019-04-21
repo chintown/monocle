@@ -1,4 +1,4 @@
-#Scroll Preview (Monocle)
+# Scroll Preview (Monocle)
 
 A Chrome extension which provides a scrollbar integrates whole-page preview.
 

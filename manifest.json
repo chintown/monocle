@@ -20,7 +20,11 @@
 
     "author": "Mike Chen",
     "background": {
-        "scripts": ["background.js"],
+        "scripts": [
+            "common/dev.js",
+            "common/user_settings.js",
+            "src/background.js"
+        ],
         "persistent": true
     },
     "commands": {
@@ -42,11 +46,12 @@
             "matches": [
                 "*://*/*"
             ],
-            "css": ["style.css"],
+            "css": ["src/style.css"],
             "js": [
                 "libs/jquery-shim.js",
                 "libs/html2canvas.js",
-                "content.js"
+                "common/dev.js",
+                "src/content.js"
             ]
         }
     ],

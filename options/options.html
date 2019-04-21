@@ -27,19 +27,6 @@
       <div id="options">
         <div id="basics">
           <h2>Basics</h2>
-          <!-- <div class="option-section">
-            <h3>Accessibility</h3>
-            <div class="option-subsection">
-              <div>
-                <span class="option-field">Keyboard Shortcut</span>
-                <div class='option-value'>
-                  <span>Alt / Alt + Shift</span>
-                  + <input id="shortcut" type="text" name="shortcutKeyCharacter" value="a" size="1" />
-                  <input type="hidden" name="shortcutKey" />
-                </div>
-              </div>
-            </div>
-          </div> -->
           <div class="option-section">
             <h3>How it works</h3>
             <div class="option-subsection">
@@ -56,7 +43,7 @@
                 <li class="warning">Generating preview is actually a heavy duty (it might even block your page). Use it wisely.</li>
               </ul>
               <br>
-              <label><input id="app_conditional" type="radio" name="mode" value="conditional" /> <b>Conditional</b>. It looks for articles only.</label>
+              <label><input id="app_conditional" type="radio" name="mode" value="conditional" /> <b>Conditional</b>. It enables for articles only.</label>
               <ul class="option-note">
                 <li>Preview is automatically generated for article-based pages.</li>
                 <li>The extension tries best to guess whether a page is article or not.</li>
@@ -137,7 +124,7 @@
           <div class="option-section">
             <h3>Whitlist</h3>
             <div class="option-subsection">
-              <span>If URL matches any following patterns, <br>preview will be enabled automatically, even you're in <b>Manual</b> mode.</span>
+              <span>If URL matches any following patterns, <br>preview will be enabled automatically, even you're in <b>Manual</b> or <b>Conditional</b> mode.</span>
               <textarea id="whitelist" cols="70" rows="8" placeholder="e.g. news.ycombinator.com/item?id=*"></textarea>
               <span>One url pattern per line. For example, </span>
               <code><pre>
@@ -150,7 +137,7 @@ www.reddit.com/r/*/comments/
           <div class="option-section">
             <h3>Blacklist</h3>
             <div class="option-subsection">
-              <span>If URL matches any following patterns, <br>preview will be disabled, even you're in <b>Automatic</b> mode.</span>
+              <span>If URL matches any following patterns, <br>preview will be disabled, even you're in <b>Automatic</b> or <b>Conditional</b> mode.</span>
               <textarea id="blacklist" cols="70" rows="8" placeholder="e.g. *.google.com"></textarea>
               <span>One url pattern per line. For example, </span>
               <code><pre>
