@@ -1,5 +1,9 @@
 # Changelog
 
+## Version 5.2
+* Add a floating handle for easy hovering.
+* Update documentation to explain how to disable auto-show on scroll.
+
 ## Version 5.1
 * Update labeling of extension icon.
 

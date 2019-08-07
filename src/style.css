@@ -2,20 +2,46 @@
     display: none !important;
 }
 #monocle-viewport {
+    box-sizing: content-box;
     position: fixed;
     top: 0;
     bottom: 0;;
     right: 0;;
-    z-index: 9999999999;;
+    z-index: 9999999999;
     will-change: right;
     transition: right 0.5s ease-in-out;
+    border-left: 3px solid #ddd;
+    background-color: #eee;
+}
+#monocle-toggle {
+    box-sizing: border-box;
+    display: inline-block;
+    writing-mode: vertical-lr;
+    text-orientation: sideways;
+    background-color: #ddd;
+    position: fixed;
+    font-size: 12px;
+    font-family: Arial, Helvetica, sans-serif;
+    top: 30vh;
+    transform: translateY(-50%);
+    right: -25px;
+    width: 25px;
+    height: 100px;
+    text-align: center;
+    padding: 10px 4px;
+    border: 1px solid lightgray;
+    border-right: none;
+    border-radius: 3px 0 0 3px;
+    box-shadow: rgba(118, 118, 118, 0.11) 2px 0px 5px 0px;
+    transition: right 0.5s ease;
+}
+.monocle-collapsed #monocle-toggle {
+    right: 0;
 }
 #monocle-snapshot {
     position: absolute;
     width: 100%;
     /*box-shadow: -5px 5px 30px #FBFBFB;*/
-    border-left: 3px solid darkgrey;
-    border-bottom: 3px solid darkgrey;
 }
 #monocle-thumbnail {
     position: absolute;

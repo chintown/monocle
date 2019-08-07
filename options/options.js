@@ -63,6 +63,9 @@ function updateUiWithSettings() {
   if (typeof setting['delay_sec_auto_hide'] !== 'undefined') {
     document.getElementById('delay_sec_auto_hide').value = parseFloat(setting['delay_sec_auto_hide']);
   }
+  if (setting['knob']) {
+    document.getElementById('knob').checked = true;
+  }
   if (typeof setting['blacklist'] !== 'undefined' && setting['blacklist'] !== '') {
     // console.log('loaded blacklist', s['blacklist'], "`" + s['blacklist'].join("\n") + "`")
     document.getElementById('blacklist').value = setting['blacklist'].join("\n");
@@ -140,6 +143,13 @@ function bindUiWithSettings() {
   document.getElementById('delay_sec_auto_hide').addEventListener('keyup', getDelaySecAutoHide);
   document.getElementById('delay_sec_auto_hide').addEventListener('blur', getDelaySecAutoHide);
   document.getElementById('delay_sec_auto_hide').addEventListener('change', getDelaySecAutoHide);
+
+  document.getElementById('knob').addEventListener('change', function (e) {
+     updateSetting('knob', e.target.checked);
+     chrome.runtime.sendMessage({msg: "reload"});
+
+     trackEvent({'name': 'option', 'detail': 'knob', 'label': ''+e.target.checked});
+  });
 
   var getList = function (e, identifier) {
     var listUrlPatterns = e.target.value;    

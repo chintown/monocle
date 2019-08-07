@@ -117,8 +117,19 @@
             <h3>Auto-hide</h3>
             <div class="option-subsection">
               <span>When it doesn't get active attentions (e.g mouse is on it or page is scrolling), let it hide with a delay in</span>
-              <label>
-                <input id="delay_sec_auto_hide" type="number" name="widthOfScroll" min="0" style="width: 50px" step="0.1" /> sec(s).</label>
+              <label><input id="delay_sec_auto_hide" type="number" name="widthOfScroll" min="0" style="width: 50px" step="0.1" /> sec(s).</label><br>
+              <span>If you set the delay to <code>-1</code>, it will only show up if mouse is on it but keep hidden when page scrolls.</span>
+            </div>
+          </div>
+          <div class="option-section">
+            <h3>Knob</h3>
+            <div class="option-subsection">
+              <div>
+                <label>
+                  <input id="knob" type="checkbox" name="useKnob" checked />
+                  <span class="option-field">Shows a floating handle for easy hovering.</span>
+                </label>
+              </div>
             </div>
           </div>
           <div class="option-section">

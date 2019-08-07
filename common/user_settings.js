@@ -5,6 +5,7 @@ var settingNames = [
   'last_auto_status',
   'width_preview',
   'delay_sec_auto_hide',
+  'knob',
   'blacklist',
   'whitelist',
   'use_sync',
@@ -79,6 +80,7 @@ function completeSettings() {
   isDirty = updateSettingIfMissing('last_auto_status', true) || isDirty;
   isDirty = updateSettingIfMissing('width_preview', 100) || isDirty;
   isDirty = updateSettingIfMissing('delay_sec_auto_hide', 1) || isDirty;
+  isDirty = updateSettingIfMissing('knob', true) || isDirty;
   isDirty = updateSettingIfMissing('blacklist', []) || isDirty;
   isDirty = updateSettingIfMissing('whitelist', []) || isDirty;
   if (isDirty) {

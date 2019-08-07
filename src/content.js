@@ -2,6 +2,7 @@ var PREFIX = 'monocle-';
 
 var CONF_SIZE_MAGNIFIER = 300;
 var CONF_WIDTH_COLLAPSED = 0;
+var CONF_DELAY_PRESET = 0.5;
 
 var BORDER_WIDTH_SNAPSHOT = 3;
 
@@ -33,6 +34,7 @@ function setupSidebar() {
     var $snapshot = domNew('<div id="' + PREFIX + 'snapshot"></div>');
     var $thumbnail = domNew('<div id="' + PREFIX + 'thumbnail"></div>');
     var $magnifier = domNew('<div id="' + PREFIX + 'magnifier"></div>');
+    var $toggler = domNew('<div id="' + PREFIX + 'toggle">Scroll Preview</div>');
     
     $magnifier.style.width = CONF_SIZE_MAGNIFIER + 'px';
     $magnifier.style.height = CONF_SIZE_MAGNIFIER + 'px';
@@ -42,6 +44,9 @@ function setupSidebar() {
     $viewport.appendChild($snapshot);
     $viewport.appendChild($thumbnail);
     $viewport.appendChild($magnifier);
+    if (CONF_USE_KNOB) {
+        $viewport.appendChild($toggler);
+    }
     dom('body').appendChild($viewport);
     collapseViewport();
 }
@@ -80,7 +85,7 @@ function delayedCollapseViewport() {
         }
         $viewport.classList.add(PREFIX + 'collapsed');
         $viewport.style.right = (-1 * (SNAPSHOT_WIDTH - CONF_WIDTH_COLLAPSED)) + 'px';
-    }, CONF_DELAY_COLLAPSED)
+    }, CONF_DELAY_COLLAPSED < 0 ? CONF_DELAY_PRESET : CONF_DELAY_COLLAPSED)
 }
 
 function expandViewport() {
@@ -330,6 +335,8 @@ function getPartialSnapshotPositions() {
 function loadGlobalMetric() {
     SNAPSHOT_WIDTH = THUMBNAIL_WIDTH = parseFloat(window.USER_SETTINGS['width_preview']);
     CONF_DELAY_COLLAPSED = parseFloat(window.USER_SETTINGS['delay_sec_auto_hide']) * 1000;
+    CONF_USE_KNOB = window.USER_SETTINGS['knob'];
+    console.log(window.USER_SETTINGS, CONF_USE_KNOB)
 }
 
 function refreshGlobalMetric() {
@@ -377,7 +384,7 @@ function refreshGlobalMetric() {
     }
 
     // $('html').css({marginRight: SNAPSHOT_WIDTH});
-    dom('#'+PREFIX+'viewport').style.width = (SNAPSHOT_WIDTH + BORDER_WIDTH_SNAPSHOT) + 'px';
+    dom('#'+PREFIX+'viewport').style.width = (SNAPSHOT_WIDTH) + 'px'; //  + BORDER_WIDTH_SNAPSHOT
     dom('#'+PREFIX+'snapshot').style.height = (SNAPSHOT_HEIGHT) + 'px';
     dom('#'+PREFIX+'thumbnail').style.height = (THUMBNAIL_HEIGHT) + 'px';
 }
@@ -385,6 +392,9 @@ function refreshGlobalMetric() {
 // http://ryanve.com/lab/dimensions/
 
 function bindScrollEvent() {
+    if (CONF_DELAY_COLLAPSED < 0) {
+        return;
+    }
     window.addEventListener('scroll', function(){
         dom('#' + PREFIX + 'magnifier').style.display = 'none';
         
@@ -495,7 +505,7 @@ function bindHoverEvent() {
             }
         });
     });
-    domAll('#' + PREFIX + 'snapshot, ' + '#' + PREFIX + 'thumbnail').forEach(function(domEl) {
+    domAll('#' + PREFIX + 'viewport, ' + '#' + PREFIX + 'toggle').forEach(function (domEl) {
         domEl.addEventListener('mouseover', function (evt) {
             if ($viewport.classList.contains(PREFIX + 'collapsed')) {
                 expandViewport();
@@ -507,8 +517,8 @@ function bindHoverEvent() {
             }
         });
     });
-    domAll('#' + PREFIX + 'snapshot, ' + '#' + PREFIX + 'thumbnail').forEach(function(domEl) {
-        domEl.addEventListener('mouseout', function (evt) {
+    domAll('#' + PREFIX + 'viewport').forEach(function (domEl) {
+        domEl.addEventListener('mouseleave', function (evt) {
             $viewport.classList.remove(PREFIX + 'mouseover')
             if (!$viewport.classList.contains(PREFIX + 'collapsed')) {
                 delayedCollapseViewport();
@@ -519,6 +529,9 @@ function bindHoverEvent() {
             }
         });
     });
+    dom('#' + PREFIX + 'dismiss').addEventListener('click', function(evt) {
+        domAll('#' + PREFIX + 'toggle').setAttribute('hidden', 'true');
+    })
 }
 
 function fixBound(input, min, max) {
